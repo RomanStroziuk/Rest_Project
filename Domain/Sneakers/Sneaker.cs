@@ -14,7 +14,6 @@ public class Sneaker
     
     public int Price { get; private set; }
     
-    
     public BrandId BrandId { get;}
     
     public Brand? Brand { get; }

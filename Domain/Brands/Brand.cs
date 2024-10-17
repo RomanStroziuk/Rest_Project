@@ -7,7 +7,6 @@ public class Brand
     public string Name { get; private set; }
 
 
-
     private Brand(BrandId id, string name)
     {
         Id = id;
