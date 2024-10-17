@@ -1,4 +1,6 @@
-﻿namespace Domain.Brands;
+﻿using Domain.Sneakers;
+
+namespace Domain.Brands;
 
 public class Brand
 {
