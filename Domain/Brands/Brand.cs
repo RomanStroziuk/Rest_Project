@@ -15,8 +15,8 @@ public class Brand
         Name = name;
     }
     
-    public static Brand New(BrandId id, string name) =>
-    new (id, name);
+    public static Brand New(BrandId id, string name)
+        => new (id, name);
     
-    public void UptateDetails(string name) => Name = name;
+    public void UpdateDetails(string name) => Name = name;
 }
