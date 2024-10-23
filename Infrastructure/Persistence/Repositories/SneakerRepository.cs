@@ -15,7 +15,14 @@ public class SneakerRepository(ApplicationDbContext context) : ISneakerRepositor
             .ToListAsync(cancellationToken);
     }
     
-    
+    public async Task<Option<Sneaker>> SearchByName(string model, CancellationToken cancellationToken)
+    {
+        var entity = await context.Sneakers
+            .AsNoTracking()
+            .FirstOrDefaultAsync(x => x.Model == model, cancellationToken);
+
+        return entity == null ? Option.None<Sneaker>() : Option.Some(entity);
+    }
     public async Task<Option<Sneaker>> GetById(SneakerId id, CancellationToken cancellationToken)
     {
         var entity = await context.Sneakers

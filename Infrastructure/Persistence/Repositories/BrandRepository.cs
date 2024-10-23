@@ -17,6 +17,15 @@ public class BrandRepository(ApplicationDbContext context): IBrandRepository, IB
             .ToListAsync(cancellationToken);
     }
     
+    public async Task<Option<Brand>> SearchByName(string name, CancellationToken cancellationToken)
+    {
+        var entity = await context.Brands
+            .AsNoTracking()
+            .FirstOrDefaultAsync(x => x.Name == name, cancellationToken);
+
+        return entity == null ? Option.None<Brand>() : Option.Some(entity);
+    }
+    
     public async Task<Option<Brand>> GetById(BrandId id, CancellationToken cancellationToken)
     {
         var entity = await context.Brands
