@@ -5,7 +5,6 @@ namespace Domain.Brands;
 public class Brand
 {
     public BrandId Id { get; }
-    
     public string Name { get; private set; }
 
 

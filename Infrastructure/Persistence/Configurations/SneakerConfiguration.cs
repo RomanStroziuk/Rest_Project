@@ -29,6 +29,10 @@ public class SneakerConfiguration : IEntityTypeConfiguration<Sneaker>
             .HasConstraintName("fk_users_categories_id")
             .OnDelete(DeleteBehavior.Restrict);
         
-      
+        builder.HasMany(x => x.SneakerWarehouses)
+            .WithOne(x => x.Sneaker)
+            .HasForeignKey(x => x.SneakerId)
+            .HasConstraintName("fk_sneaker_warehouse")
+            .OnDelete(DeleteBehavior.Restrict);
     }
 }
