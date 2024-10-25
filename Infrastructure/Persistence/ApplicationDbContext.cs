@@ -20,11 +20,17 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     public DbSet<Brand> Brands { get; set; }
     public DbSet<Category> Categories { get; set; }
     public DbSet<Order> Orders { get; set; }
+    
     public DbSet<OrderItem> OrderItems { get; set; }
+    
     public DbSet<User> Users { get; set; }
+    
     public DbSet<Role> Roles { get; set; }
+    
     public DbSet<Warehouse> Warehouses { get; set; }
+    
     public DbSet<SneakerWarehouse> SneakerWarehouses { get; set; }
+    
     public DbSet<Status> Statuses { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
