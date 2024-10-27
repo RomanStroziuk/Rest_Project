@@ -53,4 +53,19 @@ public class CategoryController(ISender sender, ICategoryQueries categoryQueries
             c => CategoryDto.FromDomainModel(c),
             e => e.ToObjectResult());
     }
+    [HttpDelete("{categoryId:guid}")]
+    public async Task<ActionResult<CategoryDto>> Delete([FromRoute] Guid categoryId, CancellationToken cancellationToken)
+    {
+        var input = new DeleteCategoryCommand()
+        {
+            CategoryId = categoryId
+        };
+
+        var result = await sender.Send(input, cancellationToken);
+
+        return result.Match<ActionResult<CategoryDto>>(
+            c => CategoryDto.FromDomainModel(c),
+            e => e.ToObjectResult());
+    }
+    
 }
