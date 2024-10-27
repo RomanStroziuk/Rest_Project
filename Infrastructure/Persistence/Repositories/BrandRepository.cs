@@ -52,5 +52,10 @@ public class BrandRepository(ApplicationDbContext context): IBrandRepository, IB
 
         return brand;
     }
-    
+    public async Task<Brand> Delete(Brand brand, CancellationToken cancellationToken)
+    {
+        context.Brands.Remove(brand);
+        await context.SaveChangesAsync(cancellationToken);
+        return brand;
+    }
 }
