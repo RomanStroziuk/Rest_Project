@@ -12,5 +12,9 @@ public class SneakerDtoValidator : AbstractValidator<SneakerDto>
         RuleFor(x => x.size)
             .NotEmpty().WithMessage("Size is required.")
             .InclusiveBetween(35, 50).WithMessage("Size must be between 35 and 50.");
+
+        RuleFor(x => x.price)
+            .NotEmpty().WithMessage("Price is required.");
+
     }
 }
