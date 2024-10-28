@@ -9,9 +9,9 @@ public class Order
     public OrderId Id { get; }
     public DateTime OrderDate { get; private set; }
     public int TotalPrice { get; private set; }
-    public User User { get; }
+    public User? User { get; }
     public UserId UserId { get; }
-    public Status Status { get; }
+    public Status? Status { get; }
     public StatusId StatusId { get; }
     public List<OrderItem> OrderItems { get; private set; } = new List<OrderItem>();
 
@@ -30,6 +30,6 @@ public class Order
     public void AddItem(OrderItem item)
     {
         OrderItems.Add(item);
-        TotalPrice += item.Quantity * item.SneakerWarehouse.Sneaker.Price;
+        //TotalPrice += item.Quantity * item.SneakerWarehouse.Sneaker.Price;
     }
 }

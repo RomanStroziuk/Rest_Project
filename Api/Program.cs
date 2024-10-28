@@ -1,6 +1,7 @@
 using Infrastructure;
 using Application;
 using Api.Modules;
+using Infrastructure.Persistence;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,8 +14,6 @@ builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddApplication();
 builder.Services.SetupServices();
 
-
-
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -23,6 +22,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
 
 await app.InitialiseDb();
 app.MapControllers();
