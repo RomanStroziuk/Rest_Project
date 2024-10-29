@@ -25,3 +25,7 @@ public class SneakerWarehouse
     public static SneakerWarehouse New(SneakerWarehouseId id, SneakerId sneakerId, WarehouseId warehouseId, int sneakerQuantity)
     => new(id, sneakerId, warehouseId, sneakerQuantity);
 }
+
+
+
+
