@@ -7,7 +7,7 @@ public abstract class CategoryException(CategoryId id, string message, Exception
     : Exception(message, innerException)
 
 {
-    public CategoryId Id { get; } = id;
+    public CategoryId CategoryId { get; } = id;
 }
 
 

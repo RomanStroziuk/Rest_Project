@@ -8,7 +8,7 @@ public abstract class BrandException(BrandId id, string message, Exception? inne
 
 {
 
-      public BrandId Id { get; } = id;
+      public BrandId BrandId { get; } = id;
 
 }
 

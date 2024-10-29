@@ -17,4 +17,14 @@
       <ProjectReference Include="..\Domain\Domain.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="OrderItems\Commands\" />
+      <Folder Include="Orders\Commands\" />
+      <Folder Include="Roles\Commands\" />
+      <Folder Include="SneakerWarehouses\Commands\" />
+      <Folder Include="Statuses\Commands\" />
+      <Folder Include="Users\Commands\" />
+      <Folder Include="Warehouses\Commands\" />
+    </ItemGroup>
+
 </Project>

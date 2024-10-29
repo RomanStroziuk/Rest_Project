@@ -7,7 +7,7 @@ namespace Application.Sneakers.Exceptions;
 public abstract class SneakerException(SneakerId id, string message, Exception? innerException = null)
     : Exception(message, innerException)
 {
-    public SneakerId UserId { get; } = id;
+    public SneakerId SneakerId { get; } = id;
 }
 
 public class SneakerNotFoundException(SneakerId id) : SneakerException(id, $"Sneaker under id: {id} not found");
