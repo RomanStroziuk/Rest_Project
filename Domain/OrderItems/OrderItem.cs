@@ -6,9 +6,9 @@ namespace Domain.OrderItems;
 public class OrderItem
 {
     public OrderItemId Id { get; }
-    public SneakerWarehouse SneakerWarehouse { get; }
+    public SneakerWarehouse? SneakerWarehouse { get; }
     public SneakerWarehouseId SneakerWarehouseId { get; }
-    public Order Order { get; }
+    public Order? Order { get; }
     public OrderId OrderId { get; }
     public int Quantity { get; private set; }
 

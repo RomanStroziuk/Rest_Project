@@ -9,6 +9,8 @@ public static class DbModule
         using var scope = app.Services.CreateScope();
         var initialiser = scope.ServiceProvider.GetRequiredService<ApplicationDbContextInitialiser>();
         await initialiser.InitializeAsync();
+        var seeder = scope.ServiceProvider.GetRequiredService<Seeder>();
+        await seeder.SeedAsync();
     }
     
 }

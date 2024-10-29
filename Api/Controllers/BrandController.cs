@@ -20,9 +20,7 @@ public class BrandsController(ISender sender, IBrandQueries brandQueries) : Cont
     }
 
     [HttpPost]
-    public async Task<ActionResult<BrandDto>> Create(
-        [FromBody] BrandDto request,
-        CancellationToken cancellationToken)
+    public async Task<ActionResult<BrandDto>> Create([FromBody] BrandDto request, CancellationToken cancellationToken)
     {
         var input = new CreateBrandCommand
         {
@@ -37,14 +35,27 @@ public class BrandsController(ISender sender, IBrandQueries brandQueries) : Cont
     }
 
     [HttpPut]
-    public async Task<ActionResult<BrandDto>> Update(
-        [FromBody] BrandDto request,
-        CancellationToken cancellationToken)
+    public async Task<ActionResult<BrandDto>> Update([FromBody] BrandDto request, CancellationToken cancellationToken)
     {
         var input = new UpdateBrandCommand
         {
             BrandId = request.Id!.Value,
             Name = request.Name
+        };
+
+        var result = await sender.Send(input, cancellationToken);
+
+        return result.Match<ActionResult<BrandDto>>(
+            b => BrandDto.FromDomainModel(b),
+            e => e.ToObjectResult());
+    }
+
+    [HttpDelete("{brandId:guid}")]
+    public async Task<ActionResult<BrandDto>> Delete([FromRoute] Guid brandId, CancellationToken cancellationToken)
+    {
+        var input = new DeleteBrandCommand
+        {
+            BrandId = brandId
         };
 
         var result = await sender.Send(input, cancellationToken);

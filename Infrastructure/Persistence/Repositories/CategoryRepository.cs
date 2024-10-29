@@ -51,5 +51,11 @@ public class CategoryRepository(ApplicationDbContext context): ICategoryReposito
 
         return category;
     }
+    public async Task<Category> Delete(Category category, CancellationToken cancellationToken)
+    {
+        context.Categories.Remove(category);
+        await context.SaveChangesAsync(cancellationToken);
+        return category;
+    }
     
 }

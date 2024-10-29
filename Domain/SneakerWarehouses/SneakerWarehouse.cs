@@ -7,9 +7,9 @@ namespace Domain.SneakerWarehouses;
 public class SneakerWarehouse
 {
     public SneakerWarehouseId Id { get; }
-    public Sneaker Sneaker { get; }
+    public Sneaker? Sneaker { get; }
     public SneakerId SneakerId { get; }
-    public Warehouse Warehouse { get; }
+    public Warehouse? Warehouse { get; }
     public WarehouseId WarehouseId { get; }
     public int SneakerQuantity { get; private set; }
     public List<OrderItem> OrderItems { get; private set; } = new List<OrderItem>();

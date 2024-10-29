@@ -9,7 +9,7 @@ public class User
     public string LastName { get; private set; }
     public string Email { get; private set; }
     public string Password { get; private set; }
-    public Role Role { get; private set; }
+    public Role? Role { get; private set; }
     public RoleId RoleId { get; }
 
     private User(UserId id, string firstName, string lastName, string email, string password, RoleId roleId)
