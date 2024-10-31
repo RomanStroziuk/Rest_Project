@@ -21,7 +21,6 @@
       <Folder Include="OrderItems\Commands\" />
       <Folder Include="Orders\Commands\" />
       <Folder Include="SneakerWarehouses\Commands\" />
-      <Folder Include="Warehouses\Commands\" />
     </ItemGroup>
 
 </Project>
