@@ -20,7 +20,6 @@
     <ItemGroup>
       <Folder Include="OrderItems\Commands\" />
       <Folder Include="Orders\Commands\" />
-      <Folder Include="SneakerWarehouses\Commands\" />
     </ItemGroup>
 
 </Project>
