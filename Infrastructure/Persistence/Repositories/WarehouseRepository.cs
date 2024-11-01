@@ -30,7 +30,7 @@ public class WarehouseRepository(ApplicationDbContext context) : IWarehouseRepos
             .AsNoTracking()
             .FirstOrDefaultAsync(x => x.Location == location, cancellationToken);
         
-        return entity is null ? Option.None<Warehouse>() : Option.Some(entity);
+        return entity == null ? Option.None<Warehouse>() : Option.Some(entity);
     }
 
     public async Task<Warehouse> Create(Warehouse warehouse, CancellationToken cancellationToken)

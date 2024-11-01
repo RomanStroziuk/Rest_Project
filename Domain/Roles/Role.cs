@@ -13,4 +13,9 @@ public class Role
     
     public static Role New(RoleId id, string title)
     => new(id, title);
+    
+    public void ChangeTitle(string newTitle)
+    {
+        Title = newTitle;
+    }
 }

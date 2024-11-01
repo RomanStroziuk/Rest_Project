@@ -7,7 +7,7 @@ public class Warehouse
     public WarehouseId Id { get; }
     public string Location { get; private set; }
     public int TotalQuantity { get; private set; }
-    public List<SneakerWarehouse> SneakerWarehouses { get; private set; } = new List<SneakerWarehouse>();
+    public List<SneakerWarehouse>? SneakerWarehouses { get; private set; } = new List<SneakerWarehouse>();
 
     private Warehouse(WarehouseId id, string location, int totalQuantity)
     {

@@ -28,17 +28,13 @@ public abstract class SneakerWarehouseException : Exception
         WarehouseId = warehouseId;
     }
 }
-
+public class SneakerWarehouseNotFoundException(SneakerWarehouseId id) : SneakerWarehouseException(id, $"Record about sneaker warehouse with ID {id} not found");
 public class SneakerNotFoundException(SneakerId sneakerId) : SneakerWarehouseException(sneakerId, $"Sneaker with ID {sneakerId} not found");
 
 public class WarehouseNotFoundException(WarehouseId warehouseId) : SneakerWarehouseException(warehouseId, $"Warehouse with ID {warehouseId} not found");
 
-//??? (після того як зробив усе, скинув в гпт , щоб перевірити помилки, він порадив дописати ось це, не знаю чи це потрібно і як це має працювати))
-public class InsufficientStockException(SneakerWarehouseId id, int availableQuantity, int requestedQuantity)
+public class InsufficientStockException(WarehouseId id, int availableQuantity, int requestedQuantity)
     : SneakerWarehouseException(id, $"Insufficient stock in warehouse {id}. Available: {availableQuantity}, requested: {requestedQuantity}");
-
-public class InvalidSneakerQuantityException(SneakerWarehouseId id)
-    : SneakerWarehouseException(id,  "Quantity cannot be less than zero.");
 
 public class SneakerWarehouseUnknownException(SneakerWarehouseId id, Exception innerException)
     : SneakerWarehouseException(id, $"Unknown exception for sneaker warehouse under ID: {id}", innerException);
