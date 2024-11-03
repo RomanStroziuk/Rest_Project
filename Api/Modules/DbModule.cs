@@ -10,7 +10,13 @@ public static class DbModule
         var initialiser = scope.ServiceProvider.GetRequiredService<ApplicationDbContextInitialiser>();
         await initialiser.InitializeAsync();
         var seeder = scope.ServiceProvider.GetRequiredService<Seeder>();
-        await seeder.SeedAsync();
+        var config = scope.ServiceProvider.GetRequiredService<IConfiguration>();
+        
+        if (bool.Parse(config["AllowSeeders"]!))
+        {
+            await seeder.SeedAsync();
+        }
+        
     }
     
 }

@@ -35,7 +35,7 @@ public class RoleController(ISender sender, IRoleRepository roleRepository, IRol
     {
         var input = new CreateRoleCommand
         {
-            Title = request.Name
+            Title = request.Title
         };
         
         var result = await sender.Send(input, cancellationToken);
@@ -51,7 +51,7 @@ public class RoleController(ISender sender, IRoleRepository roleRepository, IRol
         var input = new UpdateRoleCommand
         {
             Id = request.Id!.Value,
-            Title = request.Name
+            Title = request.Title
         };
         
         var result = await sender.Send(input, cancellationToken);
