@@ -4,7 +4,7 @@ using Domain.Sneakers;
 
 namespace Tests.Data;
 
-public static class UsersData
+public static class SneakersData
 {
     public static Sneaker MainSneaker(CategoryId categoryId, BrandId brandId)
         => Sneaker.New(SneakerId.New(), "Model Name One", 35, 2900, brandId, categoryId);

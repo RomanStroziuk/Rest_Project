@@ -105,11 +105,15 @@ public class BrandsControllerTests(IntegrationTestWebFactory factory)
 
     public async Task DisposeAsync()
     {
-        Context.Brands.RemoveRange(Context.Brands);
+        // Видалення пов'язаних записів спочатку
+        Context.SneakerWarehouses.RemoveRange(await Context.SneakerWarehouses.ToListAsync());
+    
+        // Потім видалення брендів
+        Context.Brands.RemoveRange(await Context.Brands.ToListAsync());
 
         await SaveChangesAsync();
     }
-    
+
     
     
 }
