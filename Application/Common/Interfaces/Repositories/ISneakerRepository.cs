@@ -12,4 +12,5 @@ public interface ISneakerRepository
     Task<Option<Sneaker>> SearchByName(string name, CancellationToken cancellationToken);
 
     Task<Option<Sneaker>> GetById(SneakerId id, CancellationToken cancellationToken);
+    
 }

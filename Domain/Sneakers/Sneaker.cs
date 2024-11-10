@@ -6,7 +6,7 @@ namespace Domain.Sneakers;
 
 public class Sneaker
 {
-    public SneakerId Id { get; }
+    public SneakerId Id { get; private set; }
     public string Model  { get; private set; }
     public int Size { get; private set; }
     public int Price { get; private set; }
@@ -14,7 +14,8 @@ public class Sneaker
     public Brand? Brand { get; }
     public CategoryId CategoryId { get; }
     public Category? Category { get; }
-    public List<SneakerWarehouse> SneakerWarehouses { get; private set; } = new List<SneakerWarehouse>();
+     public ICollection<SneakerImage>? Images { get; }
+     public List<SneakerWarehouse> SneakerWarehouses { get; private set; } = new List<SneakerWarehouse>();
     private Sneaker(SneakerId id, string model, int size, int price, BrandId brandId, CategoryId categoryId)
     {
         Id = id;

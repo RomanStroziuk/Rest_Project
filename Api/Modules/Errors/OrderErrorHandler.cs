@@ -14,7 +14,7 @@ public static class OrderErrorHandler
             {
                 OrderNotFoundException or
                     OrderUserNotFoundException or
-                    OrderRoleNotFoundException => StatusCodes.Status404NotFound,
+                    OrderStatusNotFoundException => StatusCodes.Status404NotFound,
                 OrderAlreadyExistsException => StatusCodes.Status409Conflict,
                 OrderUnknownException => StatusCodes.Status500InternalServerError,
                 _ => throw new NotImplementedException("Order error handler does not implemented")

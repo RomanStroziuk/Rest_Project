@@ -7,8 +7,12 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <PackageReference Include="AWSSDK.Core" Version="4.0.0-preview" />
+      <PackageReference Include="AWSSDK.Extensions.NETCore.Setup" Version="4.0.0-preview" />
+      <PackageReference Include="AWSSDK.S3" Version="4.0.0-preview" />
       <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.9.2" />
       <PackageReference Include="MediatR" Version="12.4.1" />
+      <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2" />
       <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.0" />
       <PackageReference Include="Optional" Version="4.0.0" />
     </ItemGroup>
@@ -19,7 +23,6 @@
 
     <ItemGroup>
       <Folder Include="OrderItems\Commands\" />
-      <Folder Include="Orders\Commands\" />
     </ItemGroup>
 
 </Project>

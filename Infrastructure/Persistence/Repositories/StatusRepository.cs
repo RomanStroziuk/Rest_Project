@@ -16,6 +16,16 @@ public class StatusRepository(ApplicationDbContext context) : IStatusRepository,
 
         return entity == null ? Option.None<Status>() : Option.Some(entity);
     }
+    
+    public async Task<Option<Status>> GetByTitle(string title, CancellationToken cancellationToken)
+    {
+        var entity = await context.Statuses
+            .AsNoTracking()
+            .FirstOrDefaultAsync(x => x.Title == title, cancellationToken);
+
+        return entity == null ? Option.None<Status>() : Option.Some(entity);
+    }
+    
     public async Task<IReadOnlyList<Status>> GetAll(CancellationToken cancellationToken)
     {
         return await context.Statuses

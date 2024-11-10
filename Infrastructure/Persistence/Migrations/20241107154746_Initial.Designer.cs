@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241103120019_Initial")]
+    [Migration("20241107154746_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -202,21 +202,15 @@ namespace Infrastructure.Persistence.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("id");
 
-                    b.Property<string>("ImageUrl")
+                    b.Property<string>("S3Path")
                         .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("character varying(500)")
-                        .HasColumnName("image_url");
+                        .HasColumnName("s3path");
 
                     b.Property<Guid>("SneakerId")
                         .HasColumnType("uuid")
                         .HasColumnName("sneaker_id");
-
-                    b.Property<DateTime>("UploadedAt")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("uploaded_at")
-                        .HasDefaultValueSql("timezone('utc', now())");
 
                     b.HasKey("Id")
                         .HasName("pk_sneaker_images");
@@ -412,7 +406,7 @@ namespace Infrastructure.Persistence.Migrations
                         .HasForeignKey("SneakerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
-                        .HasConstraintName("fk_sneaker_images_sneakers_id");
+                        .HasConstraintName("fk_sneaker_images_id");
 
                     b.Navigation("Sneaker");
                 });

@@ -128,14 +128,13 @@ namespace Infrastructure.Persistence.Migrations
                 {
                     id = table.Column<Guid>(type: "uuid", nullable: false),
                     sneaker_id = table.Column<Guid>(type: "uuid", nullable: false),
-                    image_url = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: false),
-                    uploaded_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "timezone('utc', now())")
+                    s3path = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("pk_sneaker_images", x => x.id);
                     table.ForeignKey(
-                        name: "fk_sneaker_images_sneakers_id",
+                        name: "fk_sneaker_images_id",
                         column: x => x.sneaker_id,
                         principalTable: "sneakers",
                         principalColumn: "id",
