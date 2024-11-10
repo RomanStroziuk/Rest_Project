@@ -25,7 +25,6 @@ namespace Api.Controllers
             
         }
         
-
         [HttpPost("upload")]
         public async Task<ActionResult> Upload([FromForm] IFormFile file, [FromForm] Guid sneakerId, CancellationToken cancellationToken)
         {
@@ -59,11 +58,11 @@ namespace Api.Controllers
             var result = await _sender.Send(command, cancellationToken);
 
             return result.Match<ActionResult>(
-                _ => NoContent(), // If successful, return 204 No Content
+                _ => NoContent(), 
                 e => e switch
                 {
-                    SneakerImageNotFoundException => NotFound(e.Message), // If image not found, return 404
-                    _ => StatusCode(500, "An unexpected error occurred.") // Handle other exceptions
+                    SneakerImageNotFoundException => NotFound(e.Message), 
+                    _ => StatusCode(500, "An unexpected error occurred.") 
                 }
             );
         }
@@ -76,10 +75,9 @@ namespace Api.Controllers
                 return BadRequest("No file uploaded.");
             }
 
-            // Send the UpdateSneakerImageCommand with the ImageId and file
             var command = new UpdateSneakerImageCommand
             {
-                ImageId = new SneakerImageId(imageId),  // Create the SneakerImageId from the GUID
+                ImageId = new SneakerImageId(imageId), 
                 File = file
             };
 

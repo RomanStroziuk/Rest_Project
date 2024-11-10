@@ -1,4 +1,6 @@
 ﻿using Api.Dtos;
+using Api.Dtos.UserDtos;
+
 using Api.Modules.Errors;
 using Application.Common.Interfaces.Queries;
 using Application.Common.Interfaces.Repositories;
