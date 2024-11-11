@@ -14,6 +14,13 @@ builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddApplication();
 builder.Services.SetupServices();
 
+builder.Services.AddCors(c =>
+{
+    c.AddPolicy("AllowOrigin", options => options.AllowAnyOrigin()
+        .AllowAnyHeader()
+        .AllowAnyMethod());
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -24,8 +31,11 @@ if (app.Environment.IsDevelopment())
 }
 
 
+
 await app.InitialiseDb();
 app.MapControllers();
+
+app.UseCors("AllowOrigin");
 
 app.Run();
 

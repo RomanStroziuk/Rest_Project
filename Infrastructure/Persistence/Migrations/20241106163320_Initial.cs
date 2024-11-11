@@ -87,13 +87,13 @@ namespace Infrastructure.Persistence.Migrations
                 {
                     table.PrimaryKey("pk_sneakers", x => x.id);
                     table.ForeignKey(
-                        name: "fk_sneakers_brands_id",
+                        name: "fk_users_brands_id",
                         column: x => x.brand_id,
                         principalTable: "brands",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "fk_sneakers_categories_id",
+                        name: "fk_users_categories_id",
                         column: x => x.category_id,
                         principalTable: "categories",
                         principalColumn: "id",
@@ -123,26 +123,6 @@ namespace Infrastructure.Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "sneaker_images",
-                columns: table => new
-                {
-                    id = table.Column<Guid>(type: "uuid", nullable: false),
-                    sneaker_id = table.Column<Guid>(type: "uuid", nullable: false),
-                    image_url = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: false),
-                    uploaded_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "timezone('utc', now())")
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("pk_sneaker_images", x => x.id);
-                    table.ForeignKey(
-                        name: "fk_sneaker_images_sneakers_id",
-                        column: x => x.sneaker_id,
-                        principalTable: "sneakers",
-                        principalColumn: "id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "sneaker_warehouses",
                 columns: table => new
                 {
@@ -155,7 +135,7 @@ namespace Infrastructure.Persistence.Migrations
                 {
                     table.PrimaryKey("pk_sneaker_warehouses", x => x.id);
                     table.ForeignKey(
-                        name: "fk_sneakers_warehouse",
+                        name: "fk_sneaker_warehouse",
                         column: x => x.sneaker_id,
                         principalTable: "sneakers",
                         principalColumn: "id",
@@ -242,11 +222,6 @@ namespace Infrastructure.Persistence.Migrations
                 column: "user_id");
 
             migrationBuilder.CreateIndex(
-                name: "ix_sneaker_images_sneaker_id",
-                table: "sneaker_images",
-                column: "sneaker_id");
-
-            migrationBuilder.CreateIndex(
                 name: "ix_sneaker_warehouses_sneaker_id",
                 table: "sneaker_warehouses",
                 column: "sneaker_id");
@@ -277,9 +252,6 @@ namespace Infrastructure.Persistence.Migrations
         {
             migrationBuilder.DropTable(
                 name: "order_items");
-
-            migrationBuilder.DropTable(
-                name: "sneaker_images");
 
             migrationBuilder.DropTable(
                 name: "sneaker_warehouses");

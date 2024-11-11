@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241103120019_Initial")]
+    [Migration("20241106163320_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -196,37 +196,6 @@ namespace Infrastructure.Persistence.Migrations
                     b.ToTable("sneakers", (string)null);
                 });
 
-            modelBuilder.Entity("Domain.Sneakers.SneakerImage", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .HasColumnType("uuid")
-                        .HasColumnName("id");
-
-                    b.Property<string>("ImageUrl")
-                        .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("character varying(500)")
-                        .HasColumnName("image_url");
-
-                    b.Property<Guid>("SneakerId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("sneaker_id");
-
-                    b.Property<DateTime>("UploadedAt")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("uploaded_at")
-                        .HasDefaultValueSql("timezone('utc', now())");
-
-                    b.HasKey("Id")
-                        .HasName("pk_sneaker_images");
-
-                    b.HasIndex("SneakerId")
-                        .HasDatabaseName("ix_sneaker_images_sneaker_id");
-
-                    b.ToTable("sneaker_images", (string)null);
-                });
-
             modelBuilder.Entity("Domain.Statuses.Status", b =>
                 {
                     b.Property<Guid>("Id")
@@ -370,7 +339,7 @@ namespace Infrastructure.Persistence.Migrations
                         .HasForeignKey("SneakerId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired()
-                        .HasConstraintName("fk_sneakers_warehouse");
+                        .HasConstraintName("fk_sneaker_warehouse");
 
                     b.HasOne("Domain.Warehouses.Warehouse", "Warehouse")
                         .WithMany("SneakerWarehouses")
@@ -391,30 +360,18 @@ namespace Infrastructure.Persistence.Migrations
                         .HasForeignKey("BrandId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired()
-                        .HasConstraintName("fk_sneakers_brands_id");
+                        .HasConstraintName("fk_users_brands_id");
 
                     b.HasOne("Domain.Сategories.Category", "Category")
                         .WithMany()
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired()
-                        .HasConstraintName("fk_sneakers_categories_id");
+                        .HasConstraintName("fk_users_categories_id");
 
                     b.Navigation("Brand");
 
                     b.Navigation("Category");
-                });
-
-            modelBuilder.Entity("Domain.Sneakers.SneakerImage", b =>
-                {
-                    b.HasOne("Domain.Sneakers.Sneaker", "Sneaker")
-                        .WithMany("Images")
-                        .HasForeignKey("SneakerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("fk_sneaker_images_sneakers_id");
-
-                    b.Navigation("Sneaker");
                 });
 
             modelBuilder.Entity("Domain.Users.User", b =>
@@ -441,8 +398,6 @@ namespace Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("Domain.Sneakers.Sneaker", b =>
                 {
-                    b.Navigation("Images");
-
                     b.Navigation("SneakerWarehouses");
                 });
 
