@@ -17,6 +17,7 @@ builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddApplication(builder.Configuration);
 builder.Services.SetupServices();
 
+
 // Додаємо AWS options
 var awsOptions = builder.Configuration.GetAWSOptions();
 awsOptions.Credentials = new BasicAWSCredentials(
@@ -25,6 +26,14 @@ awsOptions.Credentials = new BasicAWSCredentials(
 
 builder.Services.AddDefaultAWSOptions(awsOptions);
 builder.Services.AddAWSService<IAmazonS3>();
+
+
+builder.Services.AddCors(c =>
+{
+    c.AddPolicy("AllowOrigin", options => options.AllowAnyOrigin()
+        .AllowAnyHeader()
+        .AllowAnyMethod());
+});
 
 
 var app = builder.Build();
@@ -37,8 +46,11 @@ if (app.Environment.IsDevelopment())
 }
 
 
+
 await app.InitialiseDb();
 app.MapControllers();
+
+app.UseCors("AllowOrigin");
 
 app.Run();
 
