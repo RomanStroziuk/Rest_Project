@@ -12,7 +12,7 @@ public class Order
     public User? User { get; }
     public UserId UserId { get; }
     public Status? Status { get; }
-    public StatusId StatusId { get; }
+    public StatusId StatusId { get; private set;  }
     public List<OrderItem> OrderItems { get; private set; } = new List<OrderItem>();
 
     public Order(OrderId id, UserId userId, StatusId statusId, int totalPrice)
@@ -32,4 +32,16 @@ public class Order
         OrderItems.Add(item);
         //TotalPrice += item.Quantity * item.SneakerWarehouse.Sneaker.Price;
     }
+    
+    public void SetStatus(StatusId statusId)
+    {
+        StatusId = statusId;
+    }
+    
+      public void UpdateTotalPrice(int totalPrice)
+        {
+            TotalPrice = totalPrice;
+        }
+      
+      
 }

@@ -16,7 +16,7 @@ public class OrderAlreadyExistsException(OrderId id) : OrderException(id, $"Orde
 
 public class OrderUserNotFoundException(UserId userid) : OrderException(OrderId.Empty(), $"User under id: {userid} not found");
 
-public class OrderRoleNotFoundException(StatusId statusId) : OrderException(OrderId.Empty(), $"Role under id: {statusId} not found");
+public class OrderStatusNotFoundException(StatusId statusId) : OrderException(OrderId.Empty(), $"Status under id: {statusId} not found");
 
 
 

@@ -20,19 +20,19 @@ public class SneakerConfiguration : IEntityTypeConfiguration<Sneaker>
         builder.HasOne(x => x.Brand)
             .WithMany()
             .HasForeignKey(x => x.BrandId)
-            .HasConstraintName("fk_users_brands_id")
+            .HasConstraintName("fk_sneakers_brands_id")
             .OnDelete(DeleteBehavior.Restrict);
         
         builder.HasOne(x => x.Category)
             .WithMany()
             .HasForeignKey(x => x.CategoryId)
-            .HasConstraintName("fk_users_categories_id")
+            .HasConstraintName("fk_sneakers_categories_id")
             .OnDelete(DeleteBehavior.Restrict);
         
         builder.HasMany(x => x.SneakerWarehouses)
             .WithOne(x => x.Sneaker)
             .HasForeignKey(x => x.SneakerId)
-            .HasConstraintName("fk_sneaker_warehouse")
+            .HasConstraintName("fk_sneakers_warehouse")
             .OnDelete(DeleteBehavior.Restrict);
     }
 }

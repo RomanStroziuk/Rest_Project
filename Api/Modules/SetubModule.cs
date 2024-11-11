@@ -10,6 +10,8 @@ public static class SetubModule
     {
         services.AddValidators();
     }
+    
+    
 
     private static void AddValidators(this IServiceCollection services)
     {

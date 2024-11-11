@@ -1,4 +1,6 @@
 ﻿using Api.Dtos;
+using Api.Dtos.UserDtos;
+
 using Api.Modules.Errors;
 using Application.Common.Interfaces.Queries;
 using Application.Common.Interfaces.Repositories;
@@ -67,6 +69,63 @@ public class UserController(ISender sender, IUserRepository userRepository, IUse
             u => UserDto.FromDomainModel(u),
             e => e.ToObjectResult());
     }
+    
+    [HttpPut("updateUserInitials/{userId:guid}")]
+    public async Task<ActionResult<UserDto>> UpdateFirsAndLastName([FromRoute] Guid userId,  string firstName, string lastName,
+        CancellationToken cancellationToken)
+    {
+        var input = new UpdateUserFirstAndLastNameCommand()
+        {
+            UserId = userId,
+            FirstName = firstName,
+            LastName = lastName
+        };
+
+        var result = await sender.Send(input, cancellationToken);
+
+        return result.Match<ActionResult<UserDto>>(
+            u => UserDto.FromDomainModel(u),
+            e => e.ToObjectResult());
+    }
+    
+    [HttpPut("updatePassword/{userId:guid}")]
+    public async Task<ActionResult<UserDto>> UpdatePassword(
+        [FromRoute] Guid userId,
+        [FromBody] string password,
+        CancellationToken cancellationToken)
+    {
+        var input = new UpdateUserPasswordCommand
+        {
+            UserId = userId,
+            Password = password
+        };
+
+        var result = await sender.Send(input, cancellationToken);
+
+        return result.Match<ActionResult<UserDto>>(
+            u => UserDto.FromDomainModel(u),
+            e => e.ToObjectResult());
+    }
+    
+    [HttpPut("updateEmail/{userId:guid}")]
+    public async Task<ActionResult<UserDto>> UpdateEmail(
+        [FromRoute] Guid userId,
+        [FromBody] string email,
+        CancellationToken cancellationToken)
+    {
+        var input = new UpdateUserEmailCommand
+        {
+            UserId = userId,
+            Email = email
+        };
+
+        var result = await sender.Send(input, cancellationToken);
+
+        return result.Match<ActionResult<UserDto>>(
+            u => UserDto.FromDomainModel(u),
+            e => e.ToObjectResult());
+    }
+    
     
     [HttpDelete("{userId:guid}")]
     public async Task<ActionResult<UserDto>> Delete([FromRoute] Guid userId, CancellationToken cancellationToken)

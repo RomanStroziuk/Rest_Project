@@ -193,6 +193,33 @@ namespace Infrastructure.Persistence.Migrations
                     b.ToTable("sneakers", (string)null);
                 });
 
+
+            modelBuilder.Entity("Domain.Sneakers.SneakerImage", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<string>("S3Path")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)")
+                        .HasColumnName("s3path");
+
+                    b.Property<Guid>("SneakerId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("sneaker_id");
+
+                    b.HasKey("Id")
+                        .HasName("pk_sneaker_images");
+
+                    b.HasIndex("SneakerId")
+                        .HasDatabaseName("ix_sneaker_images_sneaker_id");
+
+                    b.ToTable("sneaker_images", (string)null);
+                });
+
+
             modelBuilder.Entity("Domain.Statuses.Status", b =>
                 {
                     b.Property<Guid>("Id")
@@ -370,6 +397,20 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.Navigation("Category");
                 });
+
+
+            modelBuilder.Entity("Domain.Sneakers.SneakerImage", b =>
+                {
+                    b.HasOne("Domain.Sneakers.Sneaker", "Sneaker")
+                        .WithMany("Images")
+                        .HasForeignKey("SneakerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_sneaker_images_id");
+
+                    b.Navigation("Sneaker");
+                });
+
 
             modelBuilder.Entity("Domain.Users.User", b =>
                 {

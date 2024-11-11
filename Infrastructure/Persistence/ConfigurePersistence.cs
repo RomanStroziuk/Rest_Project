@@ -73,6 +73,9 @@ public static class ConfigurePersistence
         services.AddScoped<IUserRepository>(provider => provider.GetRequiredService<UserRepository>());
         services.AddScoped<IUserQueries>(provider => provider.GetRequiredService<UserRepository>());
         
+        services.AddScoped<SneakerImageRepository>();
+        services.AddScoped<ISneakerImageRepository>(provider => provider.GetRequiredService<SneakerImageRepository>());
+        
         services.AddScoped<Seeder>();
     }
 

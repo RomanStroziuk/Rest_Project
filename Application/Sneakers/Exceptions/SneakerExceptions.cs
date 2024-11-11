@@ -18,5 +18,8 @@ public class SneakerBrandNotFoundException(BrandId brandId) : SneakerException(S
 
 public class SneakerCategoryNotFoundException(CategoryId categoryId) : SneakerException(SneakerId.Empty(), $"Category under id: {categoryId} not found");
 
+
+
+    
 public class SneakerUnknownException(SneakerId id, Exception innerException)
     : SneakerException(id, $"Unknown exception for the sneaker under id: {id}", innerException);
