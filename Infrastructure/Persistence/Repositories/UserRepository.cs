@@ -1,5 +1,7 @@
 ﻿using Application.Common.Interfaces.Queries;
 using Application.Common.Interfaces.Repositories;
+using Application.Common.Interfaces;
+
 using Domain.Users;
 using Microsoft.EntityFrameworkCore;
 using Optional;
@@ -22,6 +24,16 @@ public class UserRepository(ApplicationDbContext context) : IUserRepository, IUs
         return await context.Users
             .AsNoTracking()
             .ToListAsync(cancellationToken);
+    }
+    
+    public async Task<Option<User>> GetByEmailAndPassword(string email, string password, CancellationToken cancellationToken)
+    {
+        var entity = await context.Users
+            .Include(x=>x.Role)
+            .AsNoTracking()
+            .SingleOrDefaultAsync(x=>x.Email == email & x.Password == password, cancellationToken);
+        
+        return entity == null ? Option.None<User>() : Option.Some(entity);
     }
     public async Task<User> Create(User user, CancellationToken cancellationToken)
     {

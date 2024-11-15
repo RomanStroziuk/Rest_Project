@@ -19,6 +19,7 @@ public class StatusController(ISender sender, IStatusQueries statusQueries) : Co
     }
 
     [HttpPost]
+    
     public async Task<ActionResult<StatusDto>> Create([FromBody] StatusDto request, CancellationToken cancellationToken)
     {
         var input = new CreateStatusCommand

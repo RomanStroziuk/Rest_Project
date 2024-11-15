@@ -51,6 +51,25 @@ public class UserController(ISender sender, IUserRepository userRepository, IUse
             e => e.ToObjectResult());
     }
     
+    [HttpPost("authenticate")]
+    public async Task<ActionResult<string>> LoginUser([FromBody] LoginUserDto loginUserDto,
+        CancellationToken cancellationToken)
+    {
+        var input = new LoginUserCommand
+        {
+            Email = loginUserDto.email,
+            Password = loginUserDto.password
+        };
+
+        var result = await sender.Send(input, cancellationToken);
+
+        return result.Match<ActionResult<string>>
+        (token => token,
+            e => e.ToObjectResult());
+    }
+    
+    
+    
     [HttpPut]
     public async Task<ActionResult<UserDto>> Update([FromBody] UserDto request, CancellationToken cancellationToken)
     {
