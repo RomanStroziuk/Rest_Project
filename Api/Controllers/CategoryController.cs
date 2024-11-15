@@ -26,6 +26,7 @@ public class CategoryController(ISender sender, ICategoryQueries categoryQueries
     {
         var input = new CreateCategoryCommand
         {
+            
             Name = request.Name
         };
 
