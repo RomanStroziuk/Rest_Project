@@ -3,7 +3,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
-using Application.Common.Interfaces;
+using Application.Common.Interfaces.Authentication;
 
 namespace Infrastructure.Authentication
 {
