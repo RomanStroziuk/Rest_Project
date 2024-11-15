@@ -5,15 +5,20 @@ using Application.Common.Interfaces.Repositories;
 using Application.Warehouses.Commands;
 using Domain.Warehouses;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers;
 
 [Route("warehouse")]
 [ApiController]
+[Authorize(Roles = "Admin")]
+
 public class WarehouseController(ISender sender, IWarehouseRepository warehouseRepository, IWarehouseQueries warehouseQueries) : ControllerBase
 {
     [HttpGet]
+    [Authorize(Roles = "Admin")]
+
     public async Task<ActionResult<IReadOnlyList<WarehouseDto>>> GetAll(CancellationToken cancellationToken)
     {
         var warehouse = await warehouseQueries.GetAll(cancellationToken);
@@ -21,6 +26,8 @@ public class WarehouseController(ISender sender, IWarehouseRepository warehouseR
     }
 
     [HttpGet("{warehouseId:guid}")]
+    [Authorize(Roles = "Admin")]
+
     public async Task<ActionResult<WarehouseDto>> Get([FromRoute] Guid warehouseId, CancellationToken cancellationToken)
     {
         var entity = await warehouseRepository.GetById(new WarehouseId(warehouseId), cancellationToken);
@@ -31,6 +38,8 @@ public class WarehouseController(ISender sender, IWarehouseRepository warehouseR
     }
 
     [HttpPost]
+    [Authorize(Roles = "Admin")]
+
     public async Task<ActionResult<WarehouseDto>> Create([FromBody] WarehouseDto request, CancellationToken cancellationToken)
     {
         var input = new CreateWarehouseCommand()
@@ -47,6 +56,8 @@ public class WarehouseController(ISender sender, IWarehouseRepository warehouseR
     }
     
     [HttpPut]
+    [Authorize(Roles = "Admin")]
+
     public async Task<ActionResult<WarehouseDto>> Update([FromBody] WarehouseDto request, CancellationToken cancellationToken)
     {
         var input = new UpdateWarehouseCommand()
@@ -64,6 +75,8 @@ public class WarehouseController(ISender sender, IWarehouseRepository warehouseR
     }
     
     [HttpDelete("{warehouseId:guid}")]
+    [Authorize(Roles = "Admin")]
+
     public async Task<ActionResult<WarehouseDto>> Delete([FromRoute] Guid warehouseId, CancellationToken cancellationToken)
     {
         var input = new DeleteWarehouseCommand()

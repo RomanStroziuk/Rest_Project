@@ -3,15 +3,20 @@ using Api.Modules.Errors;
 using Application.Common.Interfaces.Queries;
 using Application.Brands.Commands;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers;
 
 [Route("brands")]
 [ApiController]
+[Authorize(Roles = "Admin")]
+
 public class BrandsController(ISender sender, IBrandQueries brandQueries) : ControllerBase
 {
     [HttpGet]
+    [Authorize(Roles = "Admin,User")]
+
     public async Task<ActionResult<IReadOnlyList<BrandDto>>> GetAll(CancellationToken cancellationToken)
     {
         var entities = await brandQueries.GetAll(cancellationToken);
@@ -20,6 +25,8 @@ public class BrandsController(ISender sender, IBrandQueries brandQueries) : Cont
     }
 
     [HttpPost]
+    [Authorize(Roles = "Admin")]
+
     public async Task<ActionResult<BrandDto>> Create([FromBody] BrandDto request, CancellationToken cancellationToken)
     {
         var input = new CreateBrandCommand
@@ -35,6 +42,8 @@ public class BrandsController(ISender sender, IBrandQueries brandQueries) : Cont
     }
 
     [HttpPut]
+    [Authorize(Roles = "Admin")]
+
     public async Task<ActionResult<BrandDto>> Update([FromBody] BrandDto request, CancellationToken cancellationToken)
     {
         var input = new UpdateBrandCommand
@@ -51,6 +60,8 @@ public class BrandsController(ISender sender, IBrandQueries brandQueries) : Cont
     }
 
     [HttpDelete("{brandId:guid}")]
+    [Authorize(Roles = "Admin")]
+
     public async Task<ActionResult<BrandDto>> Delete([FromRoute] Guid brandId, CancellationToken cancellationToken)
     {
         var input = new DeleteBrandCommand

@@ -20,6 +20,7 @@ public class SneakerWarehouseController(ISender sender,
 {
     [HttpGet]
     [Authorize(Roles = "Admin")]
+    
     public async Task<ActionResult<IReadOnlyList<SneakerWarehouseDto>>> GetAll(CancellationToken cancellationToken)
     {
         var sneakerWarehouses = await sneakerWarehouseQueries.GetAll(cancellationToken);

@@ -3,15 +3,20 @@ using Api.Modules.Errors;
 using Application.Common.Interfaces.Queries;
 using Application.Statuses.Commands;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers;
 
 [Route("status")]
 [ApiController]
+[Authorize(Roles = "Admin")]
+
 public class StatusController(ISender sender, IStatusQueries statusQueries) : ControllerBase
 {
     [HttpGet]
+    [Authorize(Roles = "Admin")]
+
     public async Task<ActionResult<IReadOnlyList<StatusDto>>> GetAll(CancellationToken cancellationToken)
     {
         var statuses = await statusQueries.GetAll(cancellationToken);
@@ -19,7 +24,8 @@ public class StatusController(ISender sender, IStatusQueries statusQueries) : Co
     }
 
     [HttpPost]
-    
+    [Authorize(Roles = "Admin")]
+
     public async Task<ActionResult<StatusDto>> Create([FromBody] StatusDto request, CancellationToken cancellationToken)
     {
         var input = new CreateStatusCommand
@@ -35,6 +41,8 @@ public class StatusController(ISender sender, IStatusQueries statusQueries) : Co
         );
     }
     [HttpPut]
+    [Authorize(Roles = "Admin")]
+
     public async Task<ActionResult<StatusDto>> Update([FromBody] StatusDto request, CancellationToken cancellationToken)
     {
         var input = new UpdateStatusCommand
@@ -52,6 +60,8 @@ public class StatusController(ISender sender, IStatusQueries statusQueries) : Co
     }
 
     [HttpDelete("{statusId:guid}")]
+    [Authorize(Roles = "Admin")]
+
     public async Task<ActionResult<StatusDto>> Delete([FromRoute] Guid statusId, CancellationToken cancellationToken)
     {
         var input = new DeleteStatusCommand

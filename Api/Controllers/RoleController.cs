@@ -5,15 +5,20 @@ using Application.Common.Interfaces.Repositories;
 using Application.Roles.Commands;
 using Domain.Roles;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers;
 
 [Route("role")]
 [ApiController]
+[Authorize(Roles = "Admin")]
+
 public class RoleController(ISender sender, IRoleRepository roleRepository, IRoleQueries roleQueries) : ControllerBase
 {
     [HttpGet]
+    [Authorize(Roles = "Admin")]
+
     public async Task<ActionResult<IReadOnlyList<RoleDto>>> GetAll(CancellationToken cancellationToken)
     {
         var roles = await roleQueries.GetAll(cancellationToken);
@@ -21,6 +26,8 @@ public class RoleController(ISender sender, IRoleRepository roleRepository, IRol
     }
 
     [HttpGet("{roleId:guid}")]
+    [Authorize(Roles = "Admin")]
+
     public async Task<ActionResult<RoleDto>> Get([FromRoute] Guid roleId, CancellationToken cancellationToken)
     {
         var entity = await roleRepository.GetById(new RoleId(roleId), cancellationToken);
@@ -31,6 +38,8 @@ public class RoleController(ISender sender, IRoleRepository roleRepository, IRol
     }
 
     [HttpPost]
+    [Authorize(Roles = "Admin")]
+
     public async Task<ActionResult<RoleDto>> Create([FromBody] RoleDto request, CancellationToken cancellationToken)
     {
         var input = new CreateRoleCommand
@@ -46,6 +55,8 @@ public class RoleController(ISender sender, IRoleRepository roleRepository, IRol
     }
     
     [HttpPut]
+    [Authorize(Roles = "Admin")]
+
     public async Task<ActionResult<RoleDto>> Update([FromBody] RoleDto request, CancellationToken cancellationToken)
     {
         var input = new UpdateRoleCommand
@@ -62,6 +73,8 @@ public class RoleController(ISender sender, IRoleRepository roleRepository, IRol
     }
     
     [HttpDelete("{roleId:guid}")]
+    [Authorize(Roles = "Admin")]
+
     public async Task<ActionResult<RoleDto>> Delete([FromRoute] Guid roleId, CancellationToken cancellationToken)
     {
         var input = new DeleteRoleCommand
