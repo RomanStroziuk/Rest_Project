@@ -1,6 +1,6 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using Application.Common.Interfaces;
+using Application.Common.Interfaces.Authentication;
 using Domain.Users;
 using Microsoft.IdentityModel.Tokens;
 
