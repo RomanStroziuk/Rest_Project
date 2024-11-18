@@ -19,8 +19,7 @@ public class ApplicationDbContext : DbContext
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
 
     public DbSet<Sneaker> Sneakers { get; set; }
-    
-    public DbSet<SneakerImage> SneakerImages { get; set; }  // Додано для збереження зображень кросівок
+    public DbSet<SneakerImage> SneakerImages { get; set; }
     public DbSet<Brand> Brands { get; set; }
     public DbSet<Category> Categories { get; set; }
     public DbSet<Order> Orders { get; set; }

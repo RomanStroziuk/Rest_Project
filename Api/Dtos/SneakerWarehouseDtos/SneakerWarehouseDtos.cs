@@ -1,7 +1,6 @@
 ﻿using Domain.SneakerWarehouses;
 
-
-namespace Api.Dtos;
+namespace Api.Dtos.SneakerWarehouseDtos;
 
 public record SneakerWarehouseDto(
     Guid? Id,
