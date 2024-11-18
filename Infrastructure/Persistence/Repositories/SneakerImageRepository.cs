@@ -54,7 +54,5 @@ public class SneakerImageRepository : ISneakerImageRepository
         await _context.SaveChangesAsync(cancellationToken);
         return sneakerImage;
     }
-
-    
     
 }
