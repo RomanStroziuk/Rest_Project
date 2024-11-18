@@ -11,6 +11,8 @@ public class SneakerWarehouseRepository(ApplicationDbContext context) : ISneaker
     public async Task<IReadOnlyList<SneakerWarehouse>> GetAll(CancellationToken cancellationToken)
     {
         return await context.SneakerWarehouses
+            .Include(x => x.Sneaker)
+            .Include(x => x.Warehouse)
             .AsNoTracking()
             .ToListAsync(cancellationToken);
     }
@@ -30,7 +32,11 @@ public class SneakerWarehouseRepository(ApplicationDbContext context) : ISneaker
     {
         await context.SneakerWarehouses.AddAsync(sneakerWarehouse, cancellationToken);
         await context.SaveChangesAsync(cancellationToken);
-        return sneakerWarehouse;
+        return await context.SneakerWarehouses
+            .Include(x => x.Sneaker)
+            .Include(x => x.Warehouse)
+            .AsNoTracking()
+            .FirstAsync(x => x.Id == sneakerWarehouse.Id, cancellationToken);
     }
 
     public async Task<SneakerWarehouse> Update(SneakerWarehouse sneakerWarehouse, CancellationToken cancellationToken)
