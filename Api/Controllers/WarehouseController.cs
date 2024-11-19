@@ -16,7 +16,7 @@ namespace Api.Controllers;
 
 public class WarehouseController(ISender sender, IWarehouseRepository warehouseRepository, IWarehouseQueries warehouseQueries) : ControllerBase
 {
-    [HttpGet]
+    [HttpGet("list")]
     [Authorize(Roles = "Admin")]
 
     public async Task<ActionResult<IReadOnlyList<WarehouseDto>>> GetAll(CancellationToken cancellationToken)
@@ -25,7 +25,7 @@ public class WarehouseController(ISender sender, IWarehouseRepository warehouseR
         return warehouse.Select(WarehouseDto.FromDomainModel).ToList();
     }
 
-    [HttpGet("{warehouseId:guid}")]
+    [HttpGet("get/{warehouseId:guid}")]
     [Authorize(Roles = "Admin")]
 
     public async Task<ActionResult<WarehouseDto>> Get([FromRoute] Guid warehouseId, CancellationToken cancellationToken)
@@ -37,7 +37,7 @@ public class WarehouseController(ISender sender, IWarehouseRepository warehouseR
             () => NotFound());
     }
 
-    [HttpPost]
+    [HttpPost("create")]
     [Authorize(Roles = "Admin")]
 
     public async Task<ActionResult<WarehouseDto>> Create([FromBody] WarehouseDto request, CancellationToken cancellationToken)
@@ -55,7 +55,7 @@ public class WarehouseController(ISender sender, IWarehouseRepository warehouseR
             e => e.ToObjectResult());
     }
     
-    [HttpPut]
+    [HttpPut("update")]
     [Authorize(Roles = "Admin")]
 
     public async Task<ActionResult<WarehouseDto>> Update([FromBody] WarehouseDto request, CancellationToken cancellationToken)
@@ -74,7 +74,7 @@ public class WarehouseController(ISender sender, IWarehouseRepository warehouseR
             e => e.ToObjectResult());
     }
     
-    [HttpDelete("{warehouseId:guid}")]
+    [HttpDelete("delete/{warehouseId:guid}")]
     [Authorize(Roles = "Admin")]
 
     public async Task<ActionResult<WarehouseDto>> Delete([FromRoute] Guid warehouseId, CancellationToken cancellationToken)

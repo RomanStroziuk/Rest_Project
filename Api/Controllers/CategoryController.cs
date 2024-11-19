@@ -15,7 +15,7 @@ namespace Api.Controllers;
 
 public class CategoryController(ISender sender, ICategoryQueries categoryQueries) : ControllerBase
 {
-    [HttpGet]
+    [HttpGet("list")]
     [Authorize(Roles = "Admin")]
 
     public async Task<ActionResult<IReadOnlyList<CategoryDto>>> GetAll(CancellationToken cancellationToken)
@@ -25,7 +25,7 @@ public class CategoryController(ISender sender, ICategoryQueries categoryQueries
         return entities.Select(CategoryDto.FromDomainModel).ToList();
     }
 
-    [HttpPost]
+    [HttpPost("create")]
     [Authorize(Roles = "Admin")]
 
     public async Task<ActionResult<CategoryDto>> Create(
@@ -45,7 +45,7 @@ public class CategoryController(ISender sender, ICategoryQueries categoryQueries
             e => e.ToObjectResult());
     }
 
-    [HttpPut]
+    [HttpPut("update")]
     [Authorize(Roles = "Admin")]
 
     public async Task<ActionResult<CategoryDto>> Update(
@@ -64,7 +64,7 @@ public class CategoryController(ISender sender, ICategoryQueries categoryQueries
             c => CategoryDto.FromDomainModel(c),
             e => e.ToObjectResult());
     }
-    [HttpDelete("{categoryId:guid}")]
+    [HttpDelete("delete/{categoryId:guid}")]
     [Authorize(Roles = "Admin")]
 
     public async Task<ActionResult<CategoryDto>> Delete([FromRoute] Guid categoryId, CancellationToken cancellationToken)

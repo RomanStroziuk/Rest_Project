@@ -16,7 +16,7 @@ namespace Api.Controllers;
 
 public class RoleController(ISender sender, IRoleRepository roleRepository, IRoleQueries roleQueries) : ControllerBase
 {
-    [HttpGet]
+    [HttpGet("list")]
     [Authorize(Roles = "Admin")]
 
     public async Task<ActionResult<IReadOnlyList<RoleDto>>> GetAll(CancellationToken cancellationToken)
@@ -25,7 +25,7 @@ public class RoleController(ISender sender, IRoleRepository roleRepository, IRol
         return roles.Select(RoleDto.FromDomainModel).ToList();
     }
 
-    [HttpGet("{roleId:guid}")]
+    [HttpGet("get/{roleId:guid}")]
     [Authorize(Roles = "Admin")]
 
     public async Task<ActionResult<RoleDto>> Get([FromRoute] Guid roleId, CancellationToken cancellationToken)
@@ -37,7 +37,7 @@ public class RoleController(ISender sender, IRoleRepository roleRepository, IRol
             () => NotFound());
     }
 
-    [HttpPost]
+    [HttpPost("create")]
     [Authorize(Roles = "Admin")]
 
     public async Task<ActionResult<RoleDto>> Create([FromBody] RoleDto request, CancellationToken cancellationToken)
@@ -54,7 +54,7 @@ public class RoleController(ISender sender, IRoleRepository roleRepository, IRol
             e => e.ToObjectResult());
     }
     
-    [HttpPut]
+    [HttpPut("update")]
     [Authorize(Roles = "Admin")]
 
     public async Task<ActionResult<RoleDto>> Update([FromBody] RoleDto request, CancellationToken cancellationToken)
@@ -72,7 +72,7 @@ public class RoleController(ISender sender, IRoleRepository roleRepository, IRol
             e => e.ToObjectResult());
     }
     
-    [HttpDelete("{roleId:guid}")]
+    [HttpDelete("delete/{roleId:guid}")]
     [Authorize(Roles = "Admin")]
 
     public async Task<ActionResult<RoleDto>> Delete([FromRoute] Guid roleId, CancellationToken cancellationToken)

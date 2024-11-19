@@ -17,7 +17,7 @@ namespace Api.Controllers;
 
 public class UserController(ISender sender, IUserRepository userRepository, IUserQueries userQueries) : ControllerBase
 {
-    [HttpGet]
+    [HttpGet("list")]
     [Authorize(Roles = "Admin")]
 
     public async Task<ActionResult<IReadOnlyList<UserDto>>> GetAll(CancellationToken cancellationToken)
@@ -26,7 +26,7 @@ public class UserController(ISender sender, IUserRepository userRepository, IUse
         return users.Select(UserDto.FromDomainModel).ToList();
     }
 
-    [HttpGet("{userId:guid}")]
+    [HttpGet("get/{userId:guid}")]
     [Authorize(Roles = "Admin")]
 
     public async Task<ActionResult<UserDto>> Get([FromRoute] Guid userId, CancellationToken cancellationToken)
@@ -38,8 +38,7 @@ public class UserController(ISender sender, IUserRepository userRepository, IUse
             () => NotFound());
     }
 
-    [HttpPost]
-    [Authorize(Roles = "Admin")]
+    [HttpPost("register")]
 
     public async Task<ActionResult<UserDto>> Create([FromBody] UserDto request, CancellationToken cancellationToken)
     {
@@ -60,7 +59,6 @@ public class UserController(ISender sender, IUserRepository userRepository, IUse
     }
     
     [HttpPost("authenticate")]
-
     public async Task<ActionResult<string>> LoginUser([FromBody] LoginUserDto loginUserDto,
         CancellationToken cancellationToken)
     {
@@ -79,7 +77,7 @@ public class UserController(ISender sender, IUserRepository userRepository, IUse
     
     
     
-    [HttpPut]
+    [HttpPut("update")]
     [Authorize(Roles = "Admin")]
 
     public async Task<ActionResult<UserDto>> Update([FromBody] UserDto request, CancellationToken cancellationToken)
@@ -154,6 +152,8 @@ public class UserController(ISender sender, IUserRepository userRepository, IUse
             UserId = userId,
             Email = email
         };
+        
+        
 
         var result = await sender.Send(input, cancellationToken);
 
@@ -163,7 +163,7 @@ public class UserController(ISender sender, IUserRepository userRepository, IUse
     }
     
     
-    [HttpDelete("{userId:guid}")]
+    [HttpDelete("delete/{userId:guid}")]
     [Authorize(Roles = "Admin")]
 
     public async Task<ActionResult<UserDto>> Delete([FromRoute] Guid userId, CancellationToken cancellationToken)
