@@ -1,7 +1,9 @@
-﻿using Application.Common.Interfaces.Queries;
+﻿using Application.Common.Interfaces;
+using Application.Common.Interfaces.Queries;
 using Application.Common.Interfaces.Repositories;
 using Domain.Orders;
 using Domain.SneakerWarehouses;
+using Infrastructure.Authentication;
 using Infrastructure.Persistence.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
@@ -32,6 +34,7 @@ public static class ConfigurePersistence
     }
     private static void AddRepositories(this IServiceCollection services)
     {
+       
 
         services.AddScoped<SneakerRepository>();
         services.AddScoped<ISneakerRepository>(provider => provider.GetRequiredService<SneakerRepository>());

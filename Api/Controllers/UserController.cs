@@ -7,22 +7,28 @@ using Application.Common.Interfaces.Repositories;
 using Application.Users.Commands;
 using Domain.Users;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers;
 
 [Route("user")]
 [ApiController]
+
 public class UserController(ISender sender, IUserRepository userRepository, IUserQueries userQueries) : ControllerBase
 {
-    [HttpGet]
+    [HttpGet("list")]
+    [Authorize(Roles = "Admin")]
+
     public async Task<ActionResult<IReadOnlyList<UserDto>>> GetAll(CancellationToken cancellationToken)
     {
         var users = await userQueries.GetAll(cancellationToken);
         return users.Select(UserDto.FromDomainModel).ToList();
     }
 
-    [HttpGet("{userId:guid}")]
+    [HttpGet("get/{userId:guid}")]
+    [Authorize(Roles = "Admin")]
+
     public async Task<ActionResult<UserDto>> Get([FromRoute] Guid userId, CancellationToken cancellationToken)
     {
         var entity = await userRepository.GetById(new UserId(userId), cancellationToken);
@@ -32,7 +38,8 @@ public class UserController(ISender sender, IUserRepository userRepository, IUse
             () => NotFound());
     }
 
-    [HttpPost]
+    [HttpPost("register")]
+
     public async Task<ActionResult<UserDto>> Create([FromBody] UserDto request, CancellationToken cancellationToken)
     {
         var input = new CreateUserCommand
@@ -51,7 +58,28 @@ public class UserController(ISender sender, IUserRepository userRepository, IUse
             e => e.ToObjectResult());
     }
     
-    [HttpPut]
+    [HttpPost("authenticate")]
+    public async Task<ActionResult<string>> LoginUser([FromBody] LoginUserDto loginUserDto,
+        CancellationToken cancellationToken)
+    {
+        var input = new LoginUserCommand
+        {
+            Email = loginUserDto.email,
+            Password = loginUserDto.password
+        };
+
+        var result = await sender.Send(input, cancellationToken);
+
+        return result.Match<ActionResult<string>>
+        (token => token,
+            e => e.ToObjectResult());
+    }
+    
+    
+    
+    [HttpPut("update")]
+    [Authorize(Roles = "Admin")]
+
     public async Task<ActionResult<UserDto>> Update([FromBody] UserDto request, CancellationToken cancellationToken)
     {
         var input = new UpdateUserCommand
@@ -71,6 +99,8 @@ public class UserController(ISender sender, IUserRepository userRepository, IUse
     }
     
     [HttpPut("updateUserInitials/{userId:guid}")]
+    [Authorize(Roles = "Admin")]
+
     public async Task<ActionResult<UserDto>> UpdateFirsAndLastName([FromRoute] Guid userId,  string firstName, string lastName,
         CancellationToken cancellationToken)
     {
@@ -89,6 +119,8 @@ public class UserController(ISender sender, IUserRepository userRepository, IUse
     }
     
     [HttpPut("updatePassword/{userId:guid}")]
+    [Authorize(Roles = "Admin")]
+
     public async Task<ActionResult<UserDto>> UpdatePassword(
         [FromRoute] Guid userId,
         [FromBody] string password,
@@ -108,6 +140,8 @@ public class UserController(ISender sender, IUserRepository userRepository, IUse
     }
     
     [HttpPut("updateEmail/{userId:guid}")]
+    [Authorize(Roles = "Admin")]
+
     public async Task<ActionResult<UserDto>> UpdateEmail(
         [FromRoute] Guid userId,
         [FromBody] string email,
@@ -118,6 +152,8 @@ public class UserController(ISender sender, IUserRepository userRepository, IUse
             UserId = userId,
             Email = email
         };
+        
+        
 
         var result = await sender.Send(input, cancellationToken);
 
@@ -127,7 +163,9 @@ public class UserController(ISender sender, IUserRepository userRepository, IUse
     }
     
     
-    [HttpDelete("{userId:guid}")]
+    [HttpDelete("delete/{userId:guid}")]
+    [Authorize(Roles = "Admin")]
+
     public async Task<ActionResult<UserDto>> Delete([FromRoute] Guid userId, CancellationToken cancellationToken)
     {
         var input = new DeleteUserCommand

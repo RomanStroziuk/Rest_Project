@@ -4,15 +4,21 @@ using Api.Modules.Errors;
 using Application.Common.Interfaces.Queries;
 using Application.Categories.Commands;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers;
 
 [Route("categories")]
 [ApiController]
+[Authorize(Roles = "Admin")]
+
+
 public class CategoryController(ISender sender, ICategoryQueries categoryQueries) : ControllerBase
 {
-    [HttpGet]
+    [HttpGet("list")]
+    [Authorize(Roles = "Admin")]
+
     public async Task<ActionResult<IReadOnlyList<CategoryDto>>> GetAll(CancellationToken cancellationToken)
     {
         var entities = await categoryQueries.GetAll(cancellationToken);
@@ -20,13 +26,16 @@ public class CategoryController(ISender sender, ICategoryQueries categoryQueries
         return entities.Select(CategoryDto.FromDomainModel).ToList();
     }
 
-    [HttpPost]
+    [HttpPost("create")]
+    [Authorize(Roles = "Admin")]
+
     public async Task<ActionResult<CategoryDto>> Create(
         [FromBody] CategoryDto request,
         CancellationToken cancellationToken)
     {
         var input = new CreateCategoryCommand
         {
+            
             Name = request.Name
         };
 
@@ -37,7 +46,9 @@ public class CategoryController(ISender sender, ICategoryQueries categoryQueries
             e => e.ToObjectResult());
     }
 
-    [HttpPut]
+    [HttpPut("update")]
+    [Authorize(Roles = "Admin")]
+
     public async Task<ActionResult<CategoryDto>> Update(
         [FromBody] CategoryDto request,
         CancellationToken cancellationToken)
@@ -54,7 +65,9 @@ public class CategoryController(ISender sender, ICategoryQueries categoryQueries
             c => CategoryDto.FromDomainModel(c),
             e => e.ToObjectResult());
     }
-    [HttpDelete("{categoryId:guid}")]
+    [HttpDelete("delete/{categoryId:guid}")]
+    [Authorize(Roles = "Admin")]
+
     public async Task<ActionResult<CategoryDto>> Delete([FromRoute] Guid categoryId, CancellationToken cancellationToken)
     {
         var input = new DeleteCategoryCommand()

@@ -6,22 +6,29 @@ using Application.Common.Interfaces.Repositories;
 using Application.Roles.Commands;
 using Domain.Roles;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers;
 
 [Route("role")]
 [ApiController]
+[Authorize(Roles = "Admin")]
+
 public class RoleController(ISender sender, IRoleRepository roleRepository, IRoleQueries roleQueries) : ControllerBase
 {
-    [HttpGet]
+    [HttpGet("list")]
+    [Authorize(Roles = "Admin")]
+
     public async Task<ActionResult<IReadOnlyList<RoleDto>>> GetAll(CancellationToken cancellationToken)
     {
         var roles = await roleQueries.GetAll(cancellationToken);
         return roles.Select(RoleDto.FromDomainModel).ToList();
     }
 
-    [HttpGet("{roleId:guid}")]
+    [HttpGet("get/{roleId:guid}")]
+    [Authorize(Roles = "Admin")]
+
     public async Task<ActionResult<RoleDto>> Get([FromRoute] Guid roleId, CancellationToken cancellationToken)
     {
         var entity = await roleRepository.GetById(new RoleId(roleId), cancellationToken);
@@ -31,7 +38,9 @@ public class RoleController(ISender sender, IRoleRepository roleRepository, IRol
             () => NotFound());
     }
 
-    [HttpPost]
+    [HttpPost("create")]
+    [Authorize(Roles = "Admin")]
+
     public async Task<ActionResult<RoleDto>> Create([FromBody] RoleDto request, CancellationToken cancellationToken)
     {
         var input = new CreateRoleCommand
@@ -46,7 +55,9 @@ public class RoleController(ISender sender, IRoleRepository roleRepository, IRol
             e => e.ToObjectResult());
     }
     
-    [HttpPut]
+    [HttpPut("update")]
+    [Authorize(Roles = "Admin")]
+
     public async Task<ActionResult<RoleDto>> Update([FromBody] RoleDto request, CancellationToken cancellationToken)
     {
         var input = new UpdateRoleCommand
@@ -62,7 +73,9 @@ public class RoleController(ISender sender, IRoleRepository roleRepository, IRol
             e => e.ToObjectResult());
     }
     
-    [HttpDelete("{roleId:guid}")]
+    [HttpDelete("delete/{roleId:guid}")]
+    [Authorize(Roles = "Admin")]
+
     public async Task<ActionResult<RoleDto>> Delete([FromRoute] Guid roleId, CancellationToken cancellationToken)
     {
         var input = new DeleteRoleCommand

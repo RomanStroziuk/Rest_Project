@@ -6,24 +6,31 @@ using Application.Common.Interfaces.Repositories;
 using Application.SneakerWarehouses.Commands;
 using Domain.SneakerWarehouses;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers;
 
 [Route("sneaker-warehouse")]
-[ApiController]
+[ApiController] 
+[Authorize(Roles = "Admin")]
+
 public class SneakerWarehouseController(ISender sender,
     ISneakerWarehouseRepository sneakerWarehouseRepository,
     ISneakerWarehouseQueries sneakerWarehouseQueries) : ControllerBase
 {
-    [HttpGet]
+    [HttpGet("list")]
+    [Authorize(Roles = "Admin")]
+    
     public async Task<ActionResult<IReadOnlyList<SneakerWarehouseDto>>> GetAll(CancellationToken cancellationToken)
     {
         var sneakerWarehouses = await sneakerWarehouseQueries.GetAll(cancellationToken);
         return sneakerWarehouses.Select(SneakerWarehouseDto.FromDomainModel).ToList();
     }
 
-    [HttpGet("{id:guid}")]
+    [HttpGet("get/{id:guid}")]
+    [Authorize(Roles = "Admin")]
+
     public async Task<ActionResult<SneakerWarehouseDto>> Get([FromRoute] Guid id, CancellationToken cancellationToken)
     {
         var entity = await sneakerWarehouseRepository.GetById(new SneakerWarehouseId(id), cancellationToken);
@@ -34,7 +41,9 @@ public class SneakerWarehouseController(ISender sender,
         );
     }
 
-    [HttpPost]
+    [HttpPost("create")]
+    [Authorize(Roles = "Admin")]
+
     public async Task<ActionResult<SneakerWarehouseDto>> Create([FromBody] SneakerWarehouseDto request,
         CancellationToken cancellationToken)
     {
@@ -52,7 +61,9 @@ public class SneakerWarehouseController(ISender sender,
             e => e.ToObjectResult());
     }
 
-    [HttpDelete("{id:guid}")]
+    [HttpDelete("delete/{id:guid}")]
+    [Authorize(Roles = "Admin")]
+
     public async Task<ActionResult<SneakerWarehouseDto>> Delete([FromRoute] Guid id, CancellationToken cancellationToken)
     {
         var input = new DeleteSneakerFromWarehouseCommand()
@@ -66,7 +77,9 @@ public class SneakerWarehouseController(ISender sender,
             s => SneakerWarehouseDto.FromDomainModel(s),
             e => e.ToObjectResult());
     }
-    [HttpPut]
+    [HttpPut("update")]
+    [Authorize(Roles = "Admin")]
+
     public async Task<ActionResult<SneakerWarehouseDto>> Update([FromBody] SneakerWarehouseDto request,
         CancellationToken cancellationToken)
     {
