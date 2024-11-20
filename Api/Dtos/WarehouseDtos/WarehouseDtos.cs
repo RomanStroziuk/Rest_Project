@@ -1,6 +1,6 @@
 ﻿using Domain.Warehouses;
 
-namespace Api.Dtos;
+namespace Api.Dtos.WarehouseDtos;
 
 public record WarehouseDto(
     Guid? Id,

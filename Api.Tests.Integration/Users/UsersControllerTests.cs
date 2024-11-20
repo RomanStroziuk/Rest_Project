@@ -8,6 +8,7 @@ using Tests.Common;
 using Tests.Data;
 using Xunit;
 using System.Net;
+using Api.Dtos.UserDtos;
 
 
 namespace Api.Tests.Integration.Users;

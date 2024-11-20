@@ -34,9 +34,7 @@ public class CreateOrderCommandHandler(
             {
                 return await status.Match<Task<Result<Order, OrderException>>>(async c =>
                     {
-                        // Видалили перевірку на існуюче замовлення
-                        int totalPrice = 0;
-                        return await CreateEntity(request.OrderDate, totalPrice, userId, statusId, cancellationToken);
+                        return await CreateEntity(request.OrderDate, userId, statusId, cancellationToken);
                     },
                     () => Task.FromResult<Result<Order, OrderException>>(new OrderStatusNotFoundException(statusId)));
             },
@@ -45,14 +43,13 @@ public class CreateOrderCommandHandler(
 
     private async Task<Result<Order, OrderException>> CreateEntity(
         DateTime orderDate,
-        int totalPrice,
         UserId userId,
         StatusId statusId,
         CancellationToken cancellationToken)
     {
         try
         {
-            var entity = Order.New(OrderId.New(), userId, statusId, totalPrice);
+            var entity = Order.New(OrderId.New(), userId, statusId);
             return await orderRepository.Create(entity, cancellationToken);
         }
         catch (Exception exception)

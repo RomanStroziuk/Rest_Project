@@ -1,6 +1,6 @@
 ﻿using Domain.Roles;
 
-namespace Api.Dtos;
+namespace Api.Dtos.RoleDtos;
 
 public record RoleDto(Guid? Id, string Title)
 {

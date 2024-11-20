@@ -1,7 +1,8 @@
-﻿using Domain.Users;
+﻿using Api.Dtos.OrderDtos;
 using Domain.Orders;
+using Domain.Users;
 
-namespace Api.Dtos.UsersDto;
+namespace Api.Dtos.UserDtos;
 
 public record UserByOrderDto(
     string FirstName,

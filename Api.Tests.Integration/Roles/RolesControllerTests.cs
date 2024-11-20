@@ -1,6 +1,7 @@
 ﻿using System.Net;
 using System.Net.Http.Json;
 using Api.Dtos;
+using Api.Dtos.RoleDtos;
 using Domain.Roles;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;

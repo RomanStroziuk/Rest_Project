@@ -16,9 +16,6 @@ public class OrderConfiguration : IEntityTypeConfiguration<Order>
         builder.Property(x => x.OrderDate)
             .HasConversion(new DateTimeUtcConverter())
             .HasDefaultValueSql("timezone('utc', now())");
-
-        builder.Property(x => x.TotalPrice)
-            .IsRequired();
         
         builder.HasOne(x => x.User)
             .WithMany()

@@ -1,6 +1,7 @@
 ﻿using System.Net;
 using System.Net.Http.Json;
 using Api.Dtos;
+using Api.Dtos.StatusDtos;
 using Domain.Statuses;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
