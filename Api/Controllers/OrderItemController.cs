@@ -5,25 +5,27 @@ using Application.Common.Interfaces.Repositories;
 using Application.OrderItems.Commands;
 using Domain.OrderItems;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers;
 
 [Route("order-item")]
 [ApiController]
+[Authorize(Roles = "Admin")]
 public class OrderItemController(ISender sender,
     IOrderItemRepository orderItemRepository,
     IOrderItemQueries orderItemQueries) : ControllerBase
 {
     
-    [HttpGet]
+    [HttpGet("list")]
     public async Task<ActionResult<IReadOnlyList<OrderItemDto>>> GetAll(CancellationToken cancellationToken)
     {
         var orderItems = await orderItemQueries.GetAll(cancellationToken);
         return orderItems.Select(OrderItemDto.FromDomainModel).ToList();
     }
     
-    [HttpGet("{id:guid}")]
+    [HttpGet("get/{id:guid}")]
     public async Task<ActionResult<OrderItemDto>> Get([FromRoute] Guid id, CancellationToken cancellationToken)
     {
         var orderItem = await orderItemRepository.GetById(new OrderItemId(id), cancellationToken);
@@ -32,7 +34,7 @@ public class OrderItemController(ISender sender,
             () => NotFound());
     }
     
-    [HttpPost]
+    [HttpPost("create")]
     public async Task<ActionResult<OrderItemDto>> Create([FromBody] OrderItemDto request, CancellationToken cancellationToken)
     {
         var input = new CreateOrderItemCommand()
@@ -49,7 +51,7 @@ public class OrderItemController(ISender sender,
             e => e.ToObjectResult());
     }
     
-    [HttpDelete("{id:guid}")]
+    [HttpDelete("delete/{id:guid}")]
     public async Task<ActionResult<OrderItemDto>> Delete([FromRoute] Guid id, CancellationToken cancellationToken)
     {
         var input = new DeleteOrderItemCommand()
@@ -64,7 +66,7 @@ public class OrderItemController(ISender sender,
             e => e.ToObjectResult());
     }
     
-    [HttpPut]
+    [HttpPut("update")]
     public async Task<ActionResult<OrderItemDto>> Update( [FromBody] OrderItemDto request, CancellationToken cancellationToken)
     {
         var input = new UpdateOrderItemCommand()

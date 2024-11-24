@@ -26,7 +26,7 @@ public class CategoriesControllerTests(IntegrationTestWebFactory factory)
             Name: categoryName);
 
         // Act
-        var response = await Client.PostAsJsonAsync("categories", request);
+        var response = await Client.PostAsJsonAsync("categories/create", request);
 
         // Assert
         response.IsSuccessStatusCode.Should().BeTrue();
@@ -50,7 +50,7 @@ public class CategoriesControllerTests(IntegrationTestWebFactory factory)
             Name: newCategoryName);
 
         // Act
-        var response = await Client.PutAsJsonAsync("categories", request);
+        var response = await Client.PutAsJsonAsync("categories/update", request);
 
         // Assert
         response.IsSuccessStatusCode.Should().BeTrue();
@@ -74,7 +74,7 @@ public class CategoriesControllerTests(IntegrationTestWebFactory factory)
             Name: _mainCategory.Name);
 
         // Act
-        var response = await Client.PostAsJsonAsync("categories", request);
+        var response = await Client.PostAsJsonAsync("categories/create", request);
 
         // Assert
         response.IsSuccessStatusCode.Should().BeFalse();
@@ -90,7 +90,40 @@ public class CategoriesControllerTests(IntegrationTestWebFactory factory)
             Name: "New Category Name");
 
         // Act
-        var response = await Client.PutAsJsonAsync("categories", request);
+        var response = await Client.PutAsJsonAsync("categories/update", request);
+
+        // Assert
+        response.IsSuccessStatusCode.Should().BeFalse();
+        response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+    }
+    
+    [Fact]
+    public async Task ShouldDeleteCategory()
+    {
+        // Arrange
+        var categoryId = _mainCategory.Id.Value;
+        
+        // Act
+        var response = await Client.DeleteAsync($"categories/delete/{categoryId}");
+
+        // Assert
+        response.IsSuccessStatusCode.Should().BeTrue();
+        
+        var categoryFromResponse = await response.ToResponseModel<CategoryDto>();
+        var categoryIdResponse = new CategoryId(categoryFromResponse.Id!.Value);
+
+        var categoryFromDataBase = await Context.Categories.FirstOrDefaultAsync(x => x.Id == categoryIdResponse);
+        categoryFromDataBase.Should().BeNull();
+    }
+    
+    [Fact]
+    public async Task ShouldNotDeleteCategoryBecauseCategoryNotFound()
+    {
+        // Arrange
+        var categoryId = Guid.NewGuid();
+        
+        // Act
+        var response = await Client.DeleteAsync($"categories/delete/{categoryId}");
 
         // Assert
         response.IsSuccessStatusCode.Should().BeFalse();

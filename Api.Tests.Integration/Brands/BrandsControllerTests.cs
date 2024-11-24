@@ -26,7 +26,7 @@ public class BrandsControllerTests(IntegrationTestWebFactory factory)
             Name: brandName);
 
         // Act
-        var response = await Client.PostAsJsonAsync("brands", request);
+        var response = await Client.PostAsJsonAsync("brands/create", request);
 
         // Assert
         response.IsSuccessStatusCode.Should().BeTrue();
@@ -50,7 +50,7 @@ public class BrandsControllerTests(IntegrationTestWebFactory factory)
             Name: newBrandName);
 
         // Act
-        var response = await Client.PutAsJsonAsync("brands", request);
+        var response = await Client.PutAsJsonAsync("brands/update", request);
 
         // Assert
         response.IsSuccessStatusCode.Should().BeTrue();
@@ -74,7 +74,7 @@ public class BrandsControllerTests(IntegrationTestWebFactory factory)
             Name: _mainBrand.Name);
 
         // Act
-        var response = await Client.PostAsJsonAsync("brands", request);
+        var response = await Client.PostAsJsonAsync("brands/create", request);
 
         // Assert
         response.IsSuccessStatusCode.Should().BeFalse();
@@ -90,7 +90,40 @@ public class BrandsControllerTests(IntegrationTestWebFactory factory)
             Name: "New Brand Name");
 
         // Act
-        var response = await Client.PutAsJsonAsync("brands", request);
+        var response = await Client.PutAsJsonAsync("brands/update", request);
+
+        // Assert
+        response.IsSuccessStatusCode.Should().BeFalse();
+        response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+    }
+
+    [Fact]
+    public async Task ShouldDeleteBrand()
+    {
+        // Arrange
+        var brandId = _mainBrand.Id.Value;
+        
+        // Act
+        var response = await Client.DeleteAsync($"brands/delete/{brandId}");
+
+        // Assert
+        response.IsSuccessStatusCode.Should().BeTrue();
+
+        var brandFromResponse = await response.ToResponseModel<BrandDto>();
+        var brandIdResponse = new BrandId(brandFromResponse.Id!.Value);
+
+        var brandFromDataBase = await Context.Brands.FirstOrDefaultAsync(x => x.Id == brandIdResponse);
+        brandFromDataBase.Should().BeNull();
+    }
+    
+    [Fact]
+    public async Task ShouldNotDeleteBrandBecauseBrandNotFound()
+    {
+        // Arrange
+        var brandId = Guid.NewGuid();
+        
+        // Act
+        var response = await Client.DeleteAsync($"brands/delete/{brandId}");
 
         // Assert
         response.IsSuccessStatusCode.Should().BeFalse();
@@ -106,10 +139,8 @@ public class BrandsControllerTests(IntegrationTestWebFactory factory)
 
     public async Task DisposeAsync()
     {
-        // Видалення пов'язаних записів спочатку
         Context.SneakerWarehouses.RemoveRange(await Context.SneakerWarehouses.ToListAsync());
     
-        // Потім видалення брендів
         Context.Brands.RemoveRange(await Context.Brands.ToListAsync());
 
         await SaveChangesAsync();

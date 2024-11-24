@@ -15,9 +15,7 @@ public class StatusControllerTests(IntegrationTestWebFactory factory)
     : BaseIntegrationTest(factory), IAsyncLifetime
 {
     private readonly Status _mainStatus = StatusData.MainStatus;
-
     
-
     [Fact]
     public async Task ShouldCreateStatus()
     {
@@ -28,7 +26,7 @@ public class StatusControllerTests(IntegrationTestWebFactory factory)
             Title: statusName);
 
         // Act
-        var response = await Client.PostAsJsonAsync("status", request);
+        var response = await Client.PostAsJsonAsync("status/create", request);
 
         // Assert
         response.IsSuccessStatusCode.Should().BeTrue();
@@ -51,7 +49,7 @@ public class StatusControllerTests(IntegrationTestWebFactory factory)
             Title: newStatusName);
 
         // Act
-        var response = await Client.PutAsJsonAsync("status", request);
+        var response = await Client.PutAsJsonAsync("status/update", request);
 
         // Assert
         response.IsSuccessStatusCode.Should().BeTrue();
@@ -74,7 +72,7 @@ public class StatusControllerTests(IntegrationTestWebFactory factory)
             Title: _mainStatus.Title);
 
         // Act
-        var response = await Client.PostAsJsonAsync("status", request);
+        var response = await Client.PostAsJsonAsync("status/create", request);
 
         // Assert
         response.IsSuccessStatusCode.Should().BeFalse();
@@ -90,7 +88,40 @@ public class StatusControllerTests(IntegrationTestWebFactory factory)
             Title: "New StatusName");
 
         // Act
-        var response = await Client.PutAsJsonAsync("status", request);
+        var response = await Client.PutAsJsonAsync("status/update", request);
+
+        // Assert
+        response.IsSuccessStatusCode.Should().BeFalse();
+        response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+    }
+    
+    [Fact]
+    public async Task ShouldDeleteStatus()
+    {
+        // Arrange
+        var statusId = _mainStatus.Id.Value;
+        
+        // Act
+        var response = await Client.DeleteAsync($"status/delete/{statusId}");
+
+        // Assert
+        response.IsSuccessStatusCode.Should().BeTrue();
+        
+        var statusFromResponse = await response.ToResponseModel<StatusDto>();
+        var statusIdResponse = new StatusId(statusFromResponse.Id!.Value);
+        
+        var statusFromDatabase = await Context.Statuses.FirstOrDefaultAsync(x => x.Id == statusIdResponse);
+        statusFromDatabase.Should().BeNull();
+    }
+    
+    [Fact]
+    public async Task ShouldNotDeleteStatusBecauseStatusNotFound()
+    {
+        // Arrange
+        var statusId = Guid.NewGuid();
+        
+        // Act
+        var response = await Client.DeleteAsync($"status/delete/{statusId}");
 
         // Assert
         response.IsSuccessStatusCode.Should().BeFalse();
@@ -99,14 +130,12 @@ public class StatusControllerTests(IntegrationTestWebFactory factory)
     
     public async Task InitializeAsync()
     {
-        // This method is called before each test method is executed
         await Context.Statuses.AddAsync(_mainStatus);
         await SaveChangesAsync();
     }
 
     public async Task DisposeAsync()
     {
-        // This method is called after each test method is executed
         Context.Statuses.RemoveRange(Context.Statuses);
         await SaveChangesAsync();
     }
