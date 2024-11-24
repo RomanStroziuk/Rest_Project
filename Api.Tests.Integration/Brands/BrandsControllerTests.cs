@@ -25,7 +25,7 @@ public class BrandsControllerTests(IntegrationTestWebFactory factory)
             Name: brandName);
 
         // Act
-        var response = await Client.PostAsJsonAsync("brands", request);
+        var response = await Client.PostAsJsonAsync("brands/create", request);
 
         // Assert
         response.IsSuccessStatusCode.Should().BeTrue();
