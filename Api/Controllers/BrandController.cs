@@ -11,12 +11,10 @@ namespace Api.Controllers;
 
 [Route("brands")]
 [ApiController]
-[Authorize(Roles = "Admin")]
 
 public class BrandsController(ISender sender, IBrandQueries brandQueries) : ControllerBase
 {
     [HttpGet("list")]
-    [Authorize(Roles = "Admin,User")]
 
     public async Task<ActionResult<IReadOnlyList<BrandDto>>> GetAll(CancellationToken cancellationToken)
     {
@@ -26,7 +24,6 @@ public class BrandsController(ISender sender, IBrandQueries brandQueries) : Cont
     }
 
     [HttpPost("create")]
-    [Authorize(Roles = "Admin")]
 
     public async Task<ActionResult<BrandDto>> Create([FromBody] BrandDto request, CancellationToken cancellationToken)
     {
@@ -43,7 +40,6 @@ public class BrandsController(ISender sender, IBrandQueries brandQueries) : Cont
     }
 
     [HttpPut("update")]
-    [Authorize(Roles = "Admin")]
 
     public async Task<ActionResult<BrandDto>> Update([FromBody] BrandDto request, CancellationToken cancellationToken)
     {
@@ -61,7 +57,6 @@ public class BrandsController(ISender sender, IBrandQueries brandQueries) : Cont
     }
 
     [HttpDelete("delete/{brandId:guid}")]
-    [Authorize(Roles = "Admin")]
 
     public async Task<ActionResult<BrandDto>> Delete([FromRoute] Guid brandId, CancellationToken cancellationToken)
     {
