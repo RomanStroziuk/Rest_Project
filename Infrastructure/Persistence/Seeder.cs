@@ -134,13 +134,13 @@ public class Seeder(ApplicationDbContext context)
         {
             throw new InvalidOperationException("Required data for Orders seeding is missing. Ensure Users and Statuses are seeded first.");
         }
-        var order = Order.New(new OrderId(Guid.NewGuid()), user.Id, status.Id, 0);
+        var order = Order.New(new OrderId(Guid.NewGuid()), user.Id, status.Id);
         var sneakerWarehouse = context.SneakerWarehouses
             .Include(sw => sw.Sneaker)
             .FirstOrDefault();
         if (sneakerWarehouse != null)
         {
-            var orderItem = OrderItem.New(new OrderItemId(Guid.NewGuid()), sneakerWarehouse.Id, order.Id, 2);
+            var orderItem = OrderItem.New(new OrderItemId(Guid.NewGuid()), sneakerWarehouse.Id, order.Id, 2, 100);
             order.AddItem(orderItem);
         }
         context.Orders.Add(order);

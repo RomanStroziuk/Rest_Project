@@ -1,4 +1,6 @@
-﻿using Domain.SneakerWarehouses;
+﻿using Api.Dtos.SneakerDtos;
+using Api.Dtos.WarehouseDtos;
+using Domain.SneakerWarehouses;
 
 namespace Api.Dtos.SneakerWarehouseDtos;
 

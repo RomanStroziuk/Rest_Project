@@ -1,4 +1,5 @@
 ﻿using Api.Dtos;
+using Api.Dtos.OrderDtos;
 using Api.Modules.Errors;
 using Application.Orders.Commands;
 using Application.Common.Interfaces.Queries;
@@ -17,7 +18,6 @@ public class OrderController(ISender sender, IOrderQueries orderQueries) : Contr
 {
     [HttpGet]
     [Authorize(Roles = "Admin")]
-
     public async Task<ActionResult<IReadOnlyList<OrderDto>>> GetAll(CancellationToken cancellationToken)
     {
         var entities = await orderQueries.GetAll(cancellationToken);
@@ -26,8 +26,6 @@ public class OrderController(ISender sender, IOrderQueries orderQueries) : Contr
 
     [HttpGet("{orderId:guid}")]
     [Authorize(Roles = "Admin")]
-
-    
     public async Task<ActionResult<OrderDto>> Get([FromRoute] Guid orderId, CancellationToken cancellationToken)
     {
         var entity = await orderQueries.GetById(new OrderId(orderId), cancellationToken);
@@ -39,7 +37,6 @@ public class OrderController(ISender sender, IOrderQueries orderQueries) : Contr
 
     [HttpPost]
     [Authorize(Roles = "Admin")]
-
     public async Task<ActionResult<OrderDto>> Create([FromBody] CreateOrderDto request, CancellationToken cancellationToken)
     {
         var input = new CreateOrderCommand
@@ -58,7 +55,6 @@ public class OrderController(ISender sender, IOrderQueries orderQueries) : Contr
 
     [HttpPut]
     [Authorize(Roles = "Admin")]
-
     public async Task<ActionResult<SetStatusOrderDto>> UpdateStatus([FromBody] SetStatusOrderDto request, CancellationToken cancellationToken)
     {
         var input = new SetStatusCommand
@@ -77,7 +73,6 @@ public class OrderController(ISender sender, IOrderQueries orderQueries) : Contr
 
     [HttpDelete("{orderId:guid}")]
     [Authorize(Roles = "Admin")]
-
     public async Task<ActionResult<OrderDto>> Delete([FromRoute] Guid orderId, CancellationToken cancellationToken)
     {
         var input = new DeleteOrderCommand 

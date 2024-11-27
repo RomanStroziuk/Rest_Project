@@ -1,7 +1,7 @@
-﻿using Domain.Users;
-using Domain.Roles;
+﻿using Api.Dtos.RoleDtos;
+using Domain.Users;
 
-namespace Api.Dtos;
+namespace Api.Dtos.UserDtos;
 
 public record UserDto(
     Guid? Id,

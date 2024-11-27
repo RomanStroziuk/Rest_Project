@@ -1,6 +1,6 @@
 ﻿using Domain.Brands;
 
-namespace Api.Dtos;
+namespace Api.Dtos.BrandDtos;
 
 public record BrandDto(Guid? Id, string Name)
 {

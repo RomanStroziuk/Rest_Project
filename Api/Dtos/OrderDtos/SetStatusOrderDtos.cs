@@ -1,7 +1,6 @@
 ﻿using Domain.Orders;
 
-
-namespace Api.Dtos;
+namespace Api.Dtos.OrderDtos;
 
 public record SetStatusOrderDto(  
       Guid OrderId ,

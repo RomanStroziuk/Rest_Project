@@ -1,4 +1,5 @@
 ﻿using Api.Dtos;
+using Api.Dtos.SneakerDtos;
 using FluentValidation;
 
 namespace Api.Modules.Validators;

@@ -1,4 +1,5 @@
 ﻿using Api.Dtos;
+using Api.Dtos.CategoryDtos;
 using Api.Modules.Errors;
 using Application.Common.Interfaces.Queries;
 using Application.Categories.Commands;

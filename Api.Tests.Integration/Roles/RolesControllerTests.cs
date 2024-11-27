@@ -1,6 +1,7 @@
 ﻿using System.Net;
 using System.Net.Http.Json;
 using Api.Dtos;
+using Api.Dtos.RoleDtos;
 using Domain.Roles;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
@@ -15,19 +16,6 @@ public class RoleControllerTests(IntegrationTestWebFactory factory)
 {
     private readonly Role _mainRole = RolesData.MainRole;
 
-    public async Task InitializeAsync()
-    {
-        // This method is called before each test method is executed
-        await Context.Roles.AddAsync(_mainRole);
-        await SaveChangesAsync();
-    }
-
-    public async Task DisposeAsync()
-    {
-        // This method is called after each test method is executed
-        Context.Roles.RemoveRange(Context.Roles);
-        await SaveChangesAsync();
-    }
 
     [Fact]
     public async Task ShouldCreateRole()
@@ -39,7 +27,7 @@ public class RoleControllerTests(IntegrationTestWebFactory factory)
             Title: roleName);
 
         // Act
-        var response = await Client.PostAsJsonAsync("role", request);
+        var response = await Client.PostAsJsonAsync("role/create", request);
 
         // Assert
         response.IsSuccessStatusCode.Should().BeTrue();
@@ -62,7 +50,7 @@ public class RoleControllerTests(IntegrationTestWebFactory factory)
             Title: newRoleName);
 
         // Act
-        var response = await Client.PutAsJsonAsync("role", request);
+        var response = await Client.PutAsJsonAsync("role/update", request);
 
         // Assert
         response.IsSuccessStatusCode.Should().BeTrue();
@@ -85,7 +73,7 @@ public class RoleControllerTests(IntegrationTestWebFactory factory)
             Title: _mainRole.Title);
 
         // Act
-        var response = await Client.PostAsJsonAsync("role", request);
+        var response = await Client.PostAsJsonAsync("role/create", request);
 
         // Assert
         response.IsSuccessStatusCode.Should().BeFalse();
@@ -101,10 +89,55 @@ public class RoleControllerTests(IntegrationTestWebFactory factory)
             Title: "New Role Name");
 
         // Act
-        var response = await Client.PutAsJsonAsync("role", request);
+        var response = await Client.PutAsJsonAsync("role/update", request);
 
         // Assert
         response.IsSuccessStatusCode.Should().BeFalse();
         response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+    }
+    
+    [Fact]
+    public async Task ShouldDeleteRole()
+    {
+        // Arrange
+        var roleId = _mainRole.Id.Value;
+        
+        // Act
+        var response = await Client.DeleteAsync($"role/delete/{roleId}");
+
+        // Assert
+        response.IsSuccessStatusCode.Should().BeTrue();
+       
+        var roleFromResponse = await response.ToResponseModel<RoleDto>();
+        var roleIdResponse = new RoleId(roleFromResponse.Id!.Value);
+        
+        var roleFromDatabase = await Context.Roles.FirstOrDefaultAsync(x => x.Id == roleIdResponse);
+        
+        roleFromDatabase.Should().BeNull();
+    }
+    
+    [Fact]
+    public async Task ShouldNotDeleteRoleBecauseRoleNotFound()
+    {
+        // Arrange
+        var roleId = Guid.NewGuid();
+        
+        // Act
+        var response = await Client.DeleteAsync($"role/delete/{roleId}");
+
+        // Assert
+        response.IsSuccessStatusCode.Should().BeFalse();
+        response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+    }
+    public async Task InitializeAsync()
+    {
+        await Context.Roles.AddAsync(_mainRole);
+        await SaveChangesAsync();
+    }
+
+    public async Task DisposeAsync()
+    {
+        Context.Roles.RemoveRange(Context.Roles);
+        await SaveChangesAsync();
     }
 }

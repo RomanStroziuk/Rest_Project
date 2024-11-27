@@ -1,8 +1,8 @@
-﻿using Domain.Brands;
+﻿using Api.Dtos.BrandDtos;
+using Api.Dtos.CategoryDtos;
 using Domain.Sneakers;
-using Domain.Сategories;
 
-namespace Api.Dtos;
+namespace Api.Dtos.SneakerDtos;
 
 public record SneakerDto(
     Guid? Id,

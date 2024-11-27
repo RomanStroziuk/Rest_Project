@@ -14,6 +14,9 @@ public class OrderItemConfiguration : IEntityTypeConfiguration<OrderItem>
         builder.Property(x => x.Id).HasConversion(x => x.Value, x => new OrderItemId(x));
 
         builder.Property(x => x.Quantity).IsRequired();
+        
+        builder.Property(x => x.TotalPrice)
+            .IsRequired();
 
         builder.Property(x => x.OrderId).HasConversion(x => x.Value, x => new OrderId(x));
         builder.Property(x => x.SneakerWarehouseId).HasConversion(x => x.Value, x => new SneakerWarehouseId(x));
