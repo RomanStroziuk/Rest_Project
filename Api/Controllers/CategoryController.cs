@@ -11,13 +11,11 @@ namespace Api.Controllers;
 
 [Route("categories")]
 [ApiController]
-[Authorize(Roles = "Admin")]
 
 
 public class CategoryController(ISender sender, ICategoryQueries categoryQueries) : ControllerBase
 {
     [HttpGet("list")]
-    [Authorize(Roles = "Admin")]
 
     public async Task<ActionResult<IReadOnlyList<CategoryDto>>> GetAll(CancellationToken cancellationToken)
     {

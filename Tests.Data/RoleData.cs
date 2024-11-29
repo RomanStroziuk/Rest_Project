@@ -2,9 +2,16 @@
 
 namespace Tests.Data;
 
-public static class RolesData
+public static class RoleData
 {
-    public static Role MainRole => Role.New(RoleId.New(), "Main Test Role");
+    public static Role AdminRole()
+        => Role.New(RoleId.New(), "Admin");
     
-    public static Role AnotherRole => Role.New(RoleId.New(), "Another Test Role");
+    
+    public static Role UserRole()
+        => Role.New(RoleId.New(), "User");
+    
+    
+    public static Role MainRole()
+        => Role.New(RoleId.New(), "MainRole");
 }

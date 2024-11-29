@@ -1,4 +1,5 @@
 ﻿using System.Net;
+using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using Api.Dtos;
 using Api.Dtos.BrandDtos;
@@ -8,18 +9,31 @@ using Microsoft.EntityFrameworkCore;
 using Tests.Common;
 using Tests.Data;
 using Xunit;
+using Domain.Roles;
+using Domain.Users;
 
 namespace Api.Tests.Integration.Brands;
 
-public class BrandsControllerTests(IntegrationTestWebFactory factory)
-    : BaseIntegrationTest(factory), IAsyncLifetime
+public class BrandsControllerTests : BaseIntegrationTest, IAsyncLifetime
 {
-    private readonly Brand _mainBrand = BrandsData.MainBrand;
+    private readonly Role _adminRole;
+    private readonly User _adminUser;
+    private readonly Brand _mainBrand;
+    
+    public BrandsControllerTests(IntegrationTestWebFactory factory) : base(factory)
+    {
+        _adminRole = RoleData.AdminRole();
+        _mainBrand = BrandsData.MainBrand();
+        _adminUser = UsersData.AdminUser(_adminRole.Id);
+    }
+
 
     [Fact]
     public async Task ShouldCreateBrand()
     {
         // Arrange
+        var authToken = await GenerateAuthTokenAsync(_adminUser.Email, _adminUser.Password);
+        Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", authToken);
         var brandName = "From Test Brand";
         var request = new BrandDto(
             Id: null,
@@ -44,6 +58,8 @@ public class BrandsControllerTests(IntegrationTestWebFactory factory)
     public async Task ShouldUpdateBrand()
     {
         // Arrange
+        var authToken = await GenerateAuthTokenAsync(_adminUser.Email, _adminUser.Password);
+        Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", authToken);
         var newBrandName = "New Brand Name";
         var request = new BrandDto(
             Id: _mainBrand.Id.Value,
@@ -69,6 +85,8 @@ public class BrandsControllerTests(IntegrationTestWebFactory factory)
     public async Task ShouldNotCreateBrandBecauseNameDuplicated()
     {
         // Arrange
+        var authToken = await GenerateAuthTokenAsync(_adminUser.Email, _adminUser.Password);
+        Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", authToken);
         var request = new BrandDto(
             Id: null,
             Name: _mainBrand.Name);
@@ -80,11 +98,44 @@ public class BrandsControllerTests(IntegrationTestWebFactory factory)
         response.IsSuccessStatusCode.Should().BeFalse();
         response.StatusCode.Should().Be(HttpStatusCode.Conflict);
     }
+    
+    [Fact]
+    public async Task ShouldFailToCreateBrand_WhenUnauthorized()
+    {
+        // Arrange
+        const string brandName = "Unauthorized Role";
+        var request = new BrandDto(Id: null, Name: brandName);
+
+        // Act
+        var response = await Client.PostAsJsonAsync("brands/create", request);
+
+        // Assert
+        response.IsSuccessStatusCode.Should().BeFalse();
+        response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+    }
+
+    
+    [Fact]
+    public async Task ShouldFailToDeleteBrand_WhenUnauthorized()
+    {
+        //Arrange
+        var brandId = _mainBrand.Id.Value;
+
+        // Act
+        var response = await Client.DeleteAsync($"brands/delete/{brandId}");
+
+        // Assert
+        response.IsSuccessStatusCode.Should().BeFalse();
+        response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+    }
+
 
     [Fact]
     public async Task ShouldNotUpdateBrandBecauseBrandNotFound()
     {
         // Arrange
+        var authToken = await GenerateAuthTokenAsync(_adminUser.Email, _adminUser.Password);
+        Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", authToken);
         var request = new BrandDto(
             Id: Guid.NewGuid(),
             Name: "New Brand Name");
@@ -101,6 +152,8 @@ public class BrandsControllerTests(IntegrationTestWebFactory factory)
     public async Task ShouldDeleteBrand()
     {
         // Arrange
+        var authToken = await GenerateAuthTokenAsync(_adminUser.Email, _adminUser.Password);
+        Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", authToken);
         var brandId = _mainBrand.Id.Value;
         
         // Act
@@ -120,6 +173,8 @@ public class BrandsControllerTests(IntegrationTestWebFactory factory)
     public async Task ShouldNotDeleteBrandBecauseBrandNotFound()
     {
         // Arrange
+        var authToken = await GenerateAuthTokenAsync(_adminUser.Email, _adminUser.Password);
+        Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", authToken);
         var brandId = Guid.NewGuid();
         
         // Act
@@ -133,15 +188,17 @@ public class BrandsControllerTests(IntegrationTestWebFactory factory)
     public async Task InitializeAsync()
     {
         await Context.Brands.AddAsync(_mainBrand);
+        await Context.Roles.AddRangeAsync(_adminRole);
+        await Context.Users.AddRangeAsync(_adminUser);
 
         await SaveChangesAsync();
     }
 
     public async Task DisposeAsync()
     {
-        Context.SneakerWarehouses.RemoveRange(await Context.SneakerWarehouses.ToListAsync());
-    
-        Context.Brands.RemoveRange(await Context.Brands.ToListAsync());
+        Context.Brands.RemoveRange(Context.Brands);
+        Context.Users.RemoveRange(Context.Users);
+        Context.Roles.RemoveRange(Context.Roles);
 
         await SaveChangesAsync();
     }
