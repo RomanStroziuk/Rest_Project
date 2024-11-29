@@ -25,6 +25,7 @@ public class CategoryController(ISender sender, ICategoryQueries categoryQueries
     }
 
     [HttpPost("create")]
+    [Authorize(Roles = "Admin")]
 
     public async Task<ActionResult<CategoryDto>> Create(
         [FromBody] CategoryDto request,
@@ -44,6 +45,7 @@ public class CategoryController(ISender sender, ICategoryQueries categoryQueries
     }
 
     [HttpPut("update")]
+    [Authorize(Roles = "Admin")]
 
     public async Task<ActionResult<CategoryDto>> Update(
         [FromBody] CategoryDto request,
@@ -62,6 +64,7 @@ public class CategoryController(ISender sender, ICategoryQueries categoryQueries
             e => e.ToObjectResult());
     }
     [HttpDelete("delete/{categoryId:guid}")]
+    [Authorize(Roles = "Admin")]
 
     public async Task<ActionResult<CategoryDto>> Delete([FromRoute] Guid categoryId, CancellationToken cancellationToken)
     {

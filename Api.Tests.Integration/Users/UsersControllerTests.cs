@@ -8,6 +8,7 @@ using Tests.Common;
 using Tests.Data;
 using Xunit;
 using System.Net;
+using System.Net.Http.Headers;
 using Api.Dtos.UserDtos;
 
 
@@ -15,18 +16,23 @@ namespace Api.Tests.Integration.Users;
 
 public class UsersControllerTests : BaseIntegrationTest, IAsyncLifetime
 {
-    private readonly Role _mainRole = RolesData.MainRole;
+    private readonly Role _adminRole;
+    private readonly User _adminUser;
     private readonly User _mainUser;
-
+    
     public UsersControllerTests(IntegrationTestWebFactory factory) : base(factory)
     {
-        _mainUser = UsersData.MainUser(_mainRole.Id);
+        _adminRole = RoleData.AdminRole();
+        _mainUser = UsersData.JustUser(_adminRole.Id);
+        _adminUser = UsersData.AdminUser(_adminRole.Id);
     }
 
     [Fact]
     public async Task ShouldCreateUser()
     {
         // Arrange
+        var authToken = await GenerateAuthTokenAsync(_adminUser.Email, _adminUser.Password);
+        Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", authToken);
         var firstName = "John";
         var lastName = "Doe";   
         var email = "john.doe@email.com";
@@ -37,7 +43,7 @@ public class UsersControllerTests : BaseIntegrationTest, IAsyncLifetime
             LastName: lastName,
             Email: email ,
             Password: password ,
-            RoleId: _mainRole.Id.Value,
+            RoleId: _adminRole.Id.Value,
             Role: null);
 
         // Act
@@ -54,28 +60,16 @@ public class UsersControllerTests : BaseIntegrationTest, IAsyncLifetime
         dbUser.LastName.Should().Be(lastName);
         dbUser.Email.Should().Be(email);
         dbUser.Password.Should().Be(password);
-        dbUser.RoleId.Value.Should().Be(_mainRole.Id.Value);
+        dbUser.RoleId.Value.Should().Be(_adminRole.Id.Value);
     }
 
-    public async Task InitializeAsync()
-    {
-        await Context.Roles.AddAsync(_mainRole);
-        await Context.Users.AddAsync(_mainUser);
-
-        await SaveChangesAsync();
-    }
-
-    public async Task DisposeAsync()
-    {
-        Context.Users.RemoveRange(Context.Users);
-
-        await SaveChangesAsync();
-    }
-
+   
     [Fact]
     public async Task ShouldReturnErrorWhenRoleDoesNotExist()
     {
         // Arrange
+        var authToken = await GenerateAuthTokenAsync(_adminUser.Email, _adminUser.Password);
+        Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", authToken);
         var firstName = "John";
         var lastName = "Doe";   
         var email = "john.doe@email.com";
@@ -110,7 +104,8 @@ public class UsersControllerTests : BaseIntegrationTest, IAsyncLifetime
     [Fact]
     public async Task ShouldUpdateUserSuccessfully()
     {
-        
+        var authToken = await GenerateAuthTokenAsync(_adminUser.Email, _adminUser.Password);
+        Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", authToken);
         var firstName = "John";
         var lastName = "Doe";   
         var email = "john.doe@email.com";
@@ -121,7 +116,7 @@ public class UsersControllerTests : BaseIntegrationTest, IAsyncLifetime
             LastName: lastName,
             Email: email ,
             Password: password ,
-            RoleId: _mainRole.Id.Value,
+            RoleId: _adminRole.Id.Value,
             Role: null);
         
         // Arrang
@@ -138,11 +133,12 @@ public class UsersControllerTests : BaseIntegrationTest, IAsyncLifetime
         var updatedUserFromDb = await Context.Users.FirstOrDefaultAsync(x => x.Id == updatedUserId);
         updatedUserFromDb.Should().NotBeNull();
 
+
         updatedUserFromDb!.FirstName.Should().Be(firstName);
         updatedUserFromDb.LastName.Should().Be(lastName);
         updatedUserFromDb.Email.Should().Be(email);
         updatedUserFromDb.Password.Should().Be(password);
-        updatedUserFromDb.RoleId.Value.Should().Be(_mainRole.Id.Value);
+        updatedUserFromDb.RoleId.Value.Should().Be(_adminRole.Id.Value);
     }
 
     
@@ -151,6 +147,8 @@ public class UsersControllerTests : BaseIntegrationTest, IAsyncLifetime
     public async Task ShouldNotUpdateUserBecauseRoleDoesNotExist()
     {
         // Arrange
+        var authToken = await GenerateAuthTokenAsync(_adminUser.Email, _adminUser.Password);
+        Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", authToken);
         var firstName = "UpdatedJohn";
         var lastName = "UpdatedDoe";
         var email = "john.doe@email.com";
@@ -173,5 +171,21 @@ public class UsersControllerTests : BaseIntegrationTest, IAsyncLifetime
         // Assert
         response.IsSuccessStatusCode.Should().BeFalse(); 
         response.StatusCode.Should().Be(HttpStatusCode.NotFound); 
+    }
+    
+    public async Task InitializeAsync()
+    {
+        await Context.Roles.AddRangeAsync(_adminRole);
+        await Context.Users.AddRangeAsync(_adminUser);
+
+        await SaveChangesAsync();
+    }
+
+    public async Task DisposeAsync()
+    {
+        Context.Users.RemoveRange(Context.Users);
+        Context.Roles.RemoveRange(Context.Roles);
+
+        await SaveChangesAsync();
     }
 }

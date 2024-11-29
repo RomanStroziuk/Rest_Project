@@ -1,4 +1,5 @@
 ﻿using System.Net.Http.Headers;
+using System.Net.Http.Json;
 using System.Security.Claims;
 using System.Text.Encodings.Web;
 using Infrastructure.Persistence;
@@ -9,6 +10,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Xunit;
+using Api.Dtos.UserDtos;
+
 
 namespace Tests.Common;
 
@@ -38,6 +41,18 @@ public abstract class BaseIntegrationTest : IClassFixture<IntegrationTestWebFact
 
         Client.DefaultRequestHeaders.Authorization =
             new AuthenticationHeaderValue(scheme: "TestScheme");
+        
+        
+      
+    }
+    
+    protected async Task<string> GenerateAuthTokenAsync(string email, string password)
+    {
+        var loginRequest = new LoginUserDto(email, password);
+        var response = await Client.PostAsJsonAsync("user/authenticate", loginRequest);
+        
+        response.EnsureSuccessStatusCode();
+        return await response.Content.ReadAsStringAsync();
     }
 
     protected async Task<int> SaveChangesAsync()
