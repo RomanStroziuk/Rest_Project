@@ -46,11 +46,12 @@ if (app.Environment.IsDevelopment())
 }
 
 
-
 await app.InitialiseDb();
 app.MapControllers();
 
 app.UseCors("AllowOrigin");
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.Run();
 

@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Infrastructure.Persistence.Migrations
 {
     /// <inheritdoc />
-    public partial class Initial : Migration
+    public partial class Init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -173,7 +173,6 @@ namespace Infrastructure.Persistence.Migrations
                 {
                     id = table.Column<Guid>(type: "uuid", nullable: false),
                     order_date = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "timezone('utc', now())"),
-                    total_price = table.Column<int>(type: "integer", nullable: false),
                     user_id = table.Column<Guid>(type: "uuid", nullable: false),
                     status_id = table.Column<Guid>(type: "uuid", nullable: false)
                 },
@@ -201,7 +200,8 @@ namespace Infrastructure.Persistence.Migrations
                     id = table.Column<Guid>(type: "uuid", nullable: false),
                     sneaker_warehouse_id = table.Column<Guid>(type: "uuid", nullable: false),
                     order_id = table.Column<Guid>(type: "uuid", nullable: false),
-                    quantity = table.Column<int>(type: "integer", nullable: false)
+                    quantity = table.Column<int>(type: "integer", nullable: false),
+                    total_price = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {

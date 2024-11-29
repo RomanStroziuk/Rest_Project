@@ -145,7 +145,4 @@ public class BrandsControllerTests(IntegrationTestWebFactory factory)
 
         await SaveChangesAsync();
     }
-
-    
-    
 }
