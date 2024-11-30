@@ -6,5 +6,4 @@ public static class StatusData
 {
     public static Status MainStatus()
         => Status.New(StatusId.New(), "MainStatus");
-
 }
