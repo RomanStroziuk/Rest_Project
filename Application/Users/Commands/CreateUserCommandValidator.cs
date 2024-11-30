@@ -2,7 +2,7 @@
 
 namespace Application.Users.Commands;
 
-public class CreateUserCommandValidator : AbstractValidator<CreateUserCommand>
+public class CreateUserCommandValidator : AbstractValidator<RegisterUserCommand>
 {
     public CreateUserCommandValidator()
     {

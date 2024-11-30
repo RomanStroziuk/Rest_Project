@@ -26,6 +26,16 @@ public class UserRepository(ApplicationDbContext context) : IUserRepository, IUs
             .ToListAsync(cancellationToken);
     }
     
+    public async Task<Option<User>> GetByEmail(string email, CancellationToken cancellationToken)
+    {
+        var entity = await context.Users
+            .Include(x=>x.Role)
+            .AsNoTracking()
+            .FirstOrDefaultAsync(x=>x.Email == email, cancellationToken);
+        
+        return entity == null ? Option.None<User>() : Option.Some(entity);
+    }
+    
     public async Task<Option<User>> GetByEmailAndPassword(string email, string password, CancellationToken cancellationToken)
     {
         var entity = await context.Users
