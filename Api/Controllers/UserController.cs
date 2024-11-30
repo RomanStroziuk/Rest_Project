@@ -40,8 +40,6 @@ public class UserController(ISender sender, IUserRepository userRepository, IUse
 
     [HttpPost("register")]
     [Authorize(Roles = "Admin")]
-
-
     public async Task<ActionResult<UserDto>> Create([FromBody] UserDto request, CancellationToken cancellationToken)
     {
         var input = new CreateUserCommand
@@ -61,7 +59,6 @@ public class UserController(ISender sender, IUserRepository userRepository, IUse
     }
     
     [HttpPost("authenticate")]
-
     public async Task<ActionResult<string>> LoginUser([FromBody] LoginUserDto loginUserDto,
         CancellationToken cancellationToken)
     {
@@ -82,8 +79,6 @@ public class UserController(ISender sender, IUserRepository userRepository, IUse
     
     [HttpPut("update")]
     [Authorize(Roles = "Admin")]
-
-
     public async Task<ActionResult<UserDto>> Update([FromBody] UserDto request, CancellationToken cancellationToken)
     {
         var input = new UpdateUserCommand
@@ -104,7 +99,6 @@ public class UserController(ISender sender, IUserRepository userRepository, IUse
     
     [HttpPut("updateUserInitials/{userId:guid}")]
     [Authorize(Roles = "Admin")]
-
     public async Task<ActionResult<UserDto>> UpdateFirstAndLastName(
         [FromRoute] Guid userId, 
         [FromBody] UserUpdateInitialsDto request,
@@ -127,8 +121,6 @@ public class UserController(ISender sender, IUserRepository userRepository, IUse
 
     [HttpPut("updatePassword/{userId:guid}")]
     [Authorize(Roles = "Admin")]
-
-
     public async Task<ActionResult<UserDto>> UpdatePassword(
         [FromRoute] Guid userId,
         [FromBody] string password,
@@ -149,8 +141,6 @@ public class UserController(ISender sender, IUserRepository userRepository, IUse
     
     [HttpPut("updateEmail/{userId:guid}")]
     [Authorize(Roles = "Admin")]
-
-
     public async Task<ActionResult<UserDto>> UpdateEmail(
         [FromRoute] Guid userId,
         [FromBody] string email,
@@ -174,8 +164,6 @@ public class UserController(ISender sender, IUserRepository userRepository, IUse
     
     [HttpDelete("delete/{userId:guid}")]
     [Authorize(Roles = "Admin")]
-
-
     public async Task<ActionResult<UserDto>> Delete([FromRoute] Guid userId, CancellationToken cancellationToken)
     {
         var input = new DeleteUserCommand

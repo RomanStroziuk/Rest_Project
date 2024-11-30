@@ -14,14 +14,12 @@ namespace Api.Controllers;
 [Route("sneaker-warehouse")]
 [ApiController] 
 [Authorize(Roles = "Admin")]
-
 public class SneakerWarehouseController(ISender sender,
     ISneakerWarehouseRepository sneakerWarehouseRepository,
     ISneakerWarehouseQueries sneakerWarehouseQueries) : ControllerBase
 {
     [HttpGet("list")]
     [Authorize(Roles = "Admin")]
-    
     public async Task<ActionResult<IReadOnlyList<SneakerWarehouseDto>>> GetAll(CancellationToken cancellationToken)
     {
         var sneakerWarehouses = await sneakerWarehouseQueries.GetAll(cancellationToken);
@@ -30,7 +28,6 @@ public class SneakerWarehouseController(ISender sender,
 
     [HttpGet("get/{id:guid}")]
     [Authorize(Roles = "Admin")]
-
     public async Task<ActionResult<SneakerWarehouseDto>> Get([FromRoute] Guid id, CancellationToken cancellationToken)
     {
         var entity = await sneakerWarehouseRepository.GetById(new SneakerWarehouseId(id), cancellationToken);
@@ -43,7 +40,6 @@ public class SneakerWarehouseController(ISender sender,
 
     [HttpPost("create")]
     [Authorize(Roles = "Admin")]
-
     public async Task<ActionResult<SneakerWarehouseDto>> Create([FromBody] SneakerWarehouseDto request,
         CancellationToken cancellationToken)
     {
@@ -63,7 +59,6 @@ public class SneakerWarehouseController(ISender sender,
 
     [HttpDelete("delete/{id:guid}")]
     [Authorize(Roles = "Admin")]
-
     public async Task<ActionResult<SneakerWarehouseDto>> Delete([FromRoute] Guid id, CancellationToken cancellationToken)
     {
         var input = new DeleteSneakerFromWarehouseCommand()
@@ -79,7 +74,6 @@ public class SneakerWarehouseController(ISender sender,
     }
     [HttpPut("update")]
     [Authorize(Roles = "Admin")]
-
     public async Task<ActionResult<SneakerWarehouseDto>> Update([FromBody] SneakerWarehouseDto request,
         CancellationToken cancellationToken)
     {

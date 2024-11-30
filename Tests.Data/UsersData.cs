@@ -10,7 +10,4 @@ public static class UsersData
     
     public static User JustUser(RoleId roleId)
         => User.New(UserId.New(), "Ali baba Two", "Baba Ali Two", "user2@gmail.com", "password2", roleId);
-    
-    
-    
 }

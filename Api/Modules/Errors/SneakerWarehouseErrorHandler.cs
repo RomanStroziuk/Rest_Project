@@ -11,8 +11,9 @@ public static class SneakerWarehouseErrorHandler
         {
             StatusCode = exception switch
             {
-                SneakerNotFoundException or
-                    WarehouseNotFoundException
+                SneakerWarehouseNotFoundException or
+                    SneakerNotFoundException or
+                        WarehouseNotFoundException
                     => StatusCodes.Status404NotFound,
                 InsufficientStockException => StatusCodes.Status400BadRequest,
                 SneakerWarehouseUnknownException => StatusCodes.Status500InternalServerError,
