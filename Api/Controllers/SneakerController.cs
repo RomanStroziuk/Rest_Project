@@ -16,7 +16,6 @@ namespace Api.Controllers;
 public class SneakerController(ISender sender, ISneakerQueries sneakerQueries) : ControllerBase
 {
     [HttpGet("list")]
-    
     public async Task<ActionResult<IReadOnlyList<SneakerDto>>> GetAll(CancellationToken cancellationToken)
     {
         var entities = await sneakerQueries.GetAll(cancellationToken);
@@ -25,7 +24,6 @@ public class SneakerController(ISender sender, ISneakerQueries sneakerQueries) :
     }
 
     [HttpGet("get/{sneakerId:guid}")]
-    
     public async Task<ActionResult<SneakerDto>> Get([FromRoute] Guid sneakerId, CancellationToken cancellationToken)
     {
         var entity = await sneakerQueries.GetById(new SneakerId(sneakerId), cancellationToken);
@@ -37,7 +35,6 @@ public class SneakerController(ISender sender, ISneakerQueries sneakerQueries) :
 
     [HttpPost("create")]
     [Authorize(Roles = "Admin")]
-
     public async Task<ActionResult<SneakerDto>> Create([FromBody] SneakerDto request, CancellationToken cancellationToken)
     {
         var input = new CreateSneakerCommand
@@ -59,7 +56,6 @@ public class SneakerController(ISender sender, ISneakerQueries sneakerQueries) :
 
     [HttpPut("update/{sneakerId:guid}")]
     [Authorize(Roles = "Admin")]
-
     public async Task<ActionResult<SneakerDto>> Update([FromBody] SneakerDto request, CancellationToken cancellationToken)
     {
         var input = new UpdateSneakerCommand
@@ -79,7 +75,6 @@ public class SneakerController(ISender sender, ISneakerQueries sneakerQueries) :
 
     [HttpDelete("delete/{sneakerId:guid}")]
     [Authorize(Roles = "Admin")]
-
     public async Task<ActionResult<SneakerDto>> Delete([FromRoute] Guid sneakerId, CancellationToken cancellationToken)
     {
         var input = new DeleteSneakerCommand
