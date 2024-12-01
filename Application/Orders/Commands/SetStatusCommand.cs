@@ -14,17 +14,9 @@ public class SetStatusCommand : IRequest<Result<Order, OrderException>>
     public required Guid StatusId { get; init; }
 }
 
-public class SetStatusCommandHandler : IRequestHandler<SetStatusCommand, Result<Order, OrderException>>
+public class SetStatusCommandHandler(IOrderRepository orderRepository, IStatusRepository statusRepository)
+    : IRequestHandler<SetStatusCommand, Result<Order, OrderException>>
 {
-    private readonly IOrderRepository orderRepository;
-    private readonly IStatusRepository statusRepository;
-
-    public SetStatusCommandHandler(IOrderRepository orderRepository, IStatusRepository statusRepository)
-    {
-        this.orderRepository = orderRepository;
-        this.statusRepository = statusRepository;
-    }
-
     public async Task<Result<Order, OrderException>> Handle(SetStatusCommand request, CancellationToken cancellationToken)
     {
         var orderId = new OrderId(request.OrderId);
