@@ -17,6 +17,9 @@ public class UserAlreadyExistsException(UserId userId) : UserException(userId, $
 
 public class UserRoleNotFoundException(RoleId roleId) : UserException(UserId.Empty(), $"Role under id: {roleId} not found");
 
+public class RoleNotFound(UserId userId, RoleId roleId)
+    : UserException(userId, $"Role {roleId} not found, while trying to assign to user {userId}");
+
 public class UserPasswordOrEmailNotFoundExceptions(UserId userId)
     : UserException(userId, $"Wrong password or email address");
 

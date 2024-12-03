@@ -11,6 +11,8 @@ public interface IUserRepository
     Task<User> Delete(User user, CancellationToken cancellationToken);
     
     Task<Option<User>> GetByEmailAndPassword(string email, string password, CancellationToken cancellationToken);
+    Task<Option<User>> GetByEmail(string email, CancellationToken cancellationToken);
+
 
     Task<Option<User>> GetByFirstNameAndLastName(
         string firstName,

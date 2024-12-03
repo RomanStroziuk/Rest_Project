@@ -39,16 +39,15 @@ public class UserController(ISender sender, IUserRepository userRepository, IUse
     }
 
     [HttpPost("register")]
-    [Authorize(Roles = "Admin")]
-    public async Task<ActionResult<UserDto>> Create([FromBody] UserDto request, CancellationToken cancellationToken)
+  
+    public async Task<ActionResult<UserDto>> Create([FromBody] CreateUserDto request, CancellationToken cancellationToken)
     {
-        var input = new CreateUserCommand
+        var input = new RegisterUserCommand()
         {
             FirstName = request.FirstName,
             LastName = request.LastName,
             Email = request.Email,
             Password = request.Password,
-            RoleId = request.RoleId
         };
         
         var result = await sender.Send(input, cancellationToken);
@@ -173,6 +172,24 @@ public class UserController(ISender sender, IUserRepository userRepository, IUse
         
         var result = await sender.Send(input, cancellationToken);
         
+        return result.Match<ActionResult<UserDto>>(
+            u => UserDto.FromDomainModel(u),
+            e => e.ToObjectResult());
+    }
+    
+    [Authorize(Roles = "Admin")]
+    [HttpPut("giveUser/{userId:guid}/role/{roleId:guid}")]
+    public async Task<ActionResult<UserDto>> GiveUserToRole([FromRoute] Guid userId, [FromRoute] Guid roleId,
+        CancellationToken cancellationToken)
+    {
+        var input = new GiveRoleToUserCommand
+        {
+            UserId = userId,
+            RoleId = roleId
+        };
+
+        var result = await sender.Send(input, cancellationToken);
+
         return result.Match<ActionResult<UserDto>>(
             u => UserDto.FromDomainModel(u),
             e => e.ToObjectResult());
