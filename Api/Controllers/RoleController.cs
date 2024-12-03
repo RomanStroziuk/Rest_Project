@@ -17,6 +17,7 @@ namespace Api.Controllers;
 public class RoleController(ISender sender, IRoleRepository roleRepository, IRoleQueries roleQueries) : ControllerBase
 {
     [HttpGet("list")]
+    [Authorize(Roles = "Admin")]
 
     public async Task<ActionResult<IReadOnlyList<RoleDto>>> GetAll(CancellationToken cancellationToken)
     {

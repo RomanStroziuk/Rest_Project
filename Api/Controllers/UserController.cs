@@ -39,9 +39,9 @@ public class UserController(ISender sender, IUserRepository userRepository, IUse
     }
 
     [HttpPost("register")]
-  
-    public async Task<ActionResult<UserDto>> Create([FromBody] CreateUserDto request, CancellationToken cancellationToken)
+    public async Task<ActionResult<CreateUserDto>> Create([FromBody] CreateUserDto request, CancellationToken cancellationToken)
     {
+        
         var input = new RegisterUserCommand()
         {
             FirstName = request.FirstName,
@@ -52,8 +52,8 @@ public class UserController(ISender sender, IUserRepository userRepository, IUse
         
         var result = await sender.Send(input, cancellationToken);
         
-        return result.Match<ActionResult<UserDto>>(
-            u => UserDto.FromDomainModel(u),
+        return result.Match<ActionResult<CreateUserDto>>(
+            u => CreateUserDto.FromUser(u),
             e => e.ToObjectResult());
     }
     
