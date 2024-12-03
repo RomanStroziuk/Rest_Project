@@ -202,7 +202,4 @@ public class BrandsControllerTests : BaseIntegrationTest, IAsyncLifetime
 
         await SaveChangesAsync();
     }
-
-    
-    
 }

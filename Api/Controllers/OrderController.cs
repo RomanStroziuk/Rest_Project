@@ -16,7 +16,7 @@ namespace Api.Controllers;
 
 public class OrderController(ISender sender, IOrderQueries orderQueries) : ControllerBase
 {
-    [HttpGet]
+    [HttpGet("list")]
     [Authorize(Roles = "Admin")]
     public async Task<ActionResult<IReadOnlyList<OrderDto>>> GetAll(CancellationToken cancellationToken)
     {
@@ -35,7 +35,7 @@ public class OrderController(ISender sender, IOrderQueries orderQueries) : Contr
             () => NotFound());
     }
 
-    [HttpPost]
+    [HttpPost("create")]
     [Authorize(Roles = "Admin")]
     public async Task<ActionResult<OrderDto>> Create([FromBody] CreateOrderDto request, CancellationToken cancellationToken)
     {
@@ -53,7 +53,7 @@ public class OrderController(ISender sender, IOrderQueries orderQueries) : Contr
             e => e.ToObjectResult());
     }
 
-    [HttpPut]
+    [HttpPut("setStatus")]
     [Authorize(Roles = "Admin")]
     public async Task<ActionResult<SetStatusOrderDto>> UpdateStatus([FromBody] SetStatusOrderDto request, CancellationToken cancellationToken)
     {
@@ -71,7 +71,7 @@ public class OrderController(ISender sender, IOrderQueries orderQueries) : Contr
     }
 
 
-    [HttpDelete("{orderId:guid}")]
+    [HttpDelete("delete/{orderId:guid}")]
     [Authorize(Roles = "Admin")]
     public async Task<ActionResult<OrderDto>> Delete([FromRoute] Guid orderId, CancellationToken cancellationToken)
     {
